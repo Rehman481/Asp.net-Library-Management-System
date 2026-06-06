@@ -1,0 +1,81 @@
+﻿@model Library_Management_System.Models.Student
+@{
+    ViewData["Title"] = "Add Student";
+}
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #60a5fa; /* Light Blue Background */
+    }
+
+    .card-custom {
+        border-radius: 20px; /* Rounded corners */
+        background-color: #1e3a8a; /* Dark Blue Card */
+        color: white; /* White text inside */
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card card-custom shadow-lg w-50">
+
+        <!-- Card Header -->
+        <div class="card-header bg-primary text-white text-center">
+            <h4 class="mb-0">Add Student</h4>
+            <small>Enter student details</small>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+
+            <form asp-action="Create" method="post" onsubmit="return validateForm();">
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Student Name*</label>
+                    <input asp-for="StudentName" class="form-control" required placeholder="Enter student name" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email*</label>
+                    <input asp-for="Email" type="email" class="form-control" required placeholder="Enter email">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Phone*</label>
+                    <input asp-for="Phone" class="form-control"required placeholder="Enter phone number" />
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-success px-4">Add</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">Cancel</a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        const studentname = document.querySelector('[name="StudentName"]').value.trim();
+        const email = document.querySelector('[name="Email"]').value.trim();
+        const phone = document.querySelector('[name="Phone"]').value.trim();
+
+        if (!studentname || !email || !phone) {
+            alert("All fields are required: Student Name, Email, and Phone.");
+            return false;
+        }
+        return true;
+         // Phone validation (basic)
+        const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+        if (!phoneRegex.test(phone)) {
+            alert("Please enter a valid phone number.");
+            return false;
+        }
+
+        return true;
+    }
+</script>

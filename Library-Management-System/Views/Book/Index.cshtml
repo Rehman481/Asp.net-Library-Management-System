@@ -1,0 +1,616 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<Library_Management_System.Models.Book>
+@{
+    ViewData["Title"] = "Books - Library Management";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+        }
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+
+            .stats-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .icon-books {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+        }
+
+        .icon-authors {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+        }
+
+        .icon-genres {
+            background: linear-gradient(135deg, #4cc9f0, #4895ef);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table {
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            .table thead th {
+                background: #f8f9fa;
+                border: none;
+                padding: 15px 20px;
+                font-weight: 600;
+                color: #495057;
+                border-bottom: 2px solid #e9ecef;
+            }
+
+            .table tbody td {
+                padding: 15px 20px;
+                vertical-align: middle;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+            .table tbody tr:hover {
+                background-color: rgba(67, 97, 238, 0.05);
+            }
+
+        .btn {
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+            }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.875rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge-genre {
+            background: linear-gradient(135deg, #4cc9f0, #4895ef);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .description-text {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+            .empty-state i {
+                font-size: 4rem;
+                margin-bottom: 20px;
+                color: #dee2e6;
+            }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            width: 300px;
+        }
+
+            .search-box::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .search-box:focus {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                box-shadow: none;
+            }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+            .no-results i {
+                font-size: 3rem;
+                margin-bottom: 15px;
+                color: #dee2e6;
+            }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .search-info {
+            background: #e7f3ff;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 15px 25px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quantity-badge {
+            background: linear-gradient(135deg, #4cc9f0, #4895ef);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .quantity-low {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+        }
+
+        .year-badge {
+            background: linear-gradient(135deg, #7209b7, #560bad);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="header-section glass-card mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="display-5 fw-bold"><i class="fas fa-book-open me-3"></i>Library Management</h1>
+                    <p class="mb-0">Manage your book collection with ease</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="input-group" style="max-width: 400px; margin-left: auto;">
+                        <input type="text" class="form-control search-box" id="searchInput" placeholder="Search by book name, author, or genre...">
+                        <button class="btn btn-light" id="searchBtn" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="btn btn-outline-light" id="clearSearch" type="button" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon icon-books">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 id="totalBooks">@Model.Count</h3>
+                    <p class="text-muted">Total Books</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon icon-authors">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <h3 id="totalAuthors">@Model.Select(b => b.Author).Distinct().Count()</h3>
+                    <p class="text-muted">Unique Authors</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon icon-genres">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <h3 id="totalGenres">@Model.Select(b => b.Genre).Distinct().Count()</h3>
+                    <p class="text-muted">Genres</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon" style="background: linear-gradient(135deg, #7209b7, #560bad);">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <h3 id="totalQuantity">@Model.Sum(b => b.Quantity)</h3>
+                    <p class="text-muted">Total Copies</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Books Table -->
+        <div class="glass-card">
+            <div class="table-header">
+                <h3 class="mb-0"><i class="fas fa-list me-2"></i>Book Collection</h3>
+                <a asp-action="Create" class="btn btn-light">
+                    <i class="fas fa-plus-circle me-2"></i>Add New Book
+                </a>
+            </div>
+
+            <!-- Search Results Info -->
+            <div class="search-info" id="searchInfo">
+                <i class="fas fa-info-circle me-2"></i>
+                <span id="searchInfoText"></span>
+            </div>
+
+            @if (Model.Count == 0)
+            {
+                <div class="empty-state">
+                    <i class="fas fa-book"></i>
+                    <h4>No Books Available</h4>
+                    <p class="text-muted">Get started by adding your first book to the library.</p>
+                    <a asp-action="Create" class="btn btn-primary mt-3">
+                        <i class="fas fa-plus-circle me-2"></i>Add Your First Book
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover" id="booksTable">
+                        <thead>
+                            <tr>
+                                <th>Book ID</th>
+                                <th>Book Name</th>
+                                <th>Author</th>
+                                <th>Genre</th>
+                                <th>Published Year</th>
+                                <th>Quantity</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="booksTableBody">
+                            @foreach (var item in Model)
+                            {
+                                <tr class="book-row"
+                                    data-bookname="@item.BookName?.ToLower()"
+                                    data-author="@item.Author?.ToLower()"
+                                    data-genre="@item.Genre?.ToLower()">
+                                    <td><strong>#@item.BookId</strong></td>
+                                    <td class="book-name">@item.BookName</td>
+                                    <td class="author">@item.Author</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Genre))
+                                        {
+                                            <span class="badge-genre genre">@item.Genre</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Not specified</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.PublicationYear.HasValue)
+                                        {
+                                            <span class="year-badge">@item.PublicationYear</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="quantity-badge @(item.Quantity <= 2 ? "quantity-low" : "")">
+                                            <i class="fas fa-cube me-1"></i>@item.Quantity
+                                        </span>
+                                    </td>
+                                    <td class="description">
+                                        @if (!string.IsNullOrEmpty(item.Description))
+                                        {
+                                            <span class="description-text" title="@item.Description">
+                                                @(item.Description.Length > 50 ? item.Description.Substring(0, 50) + "..." : item.Description)
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No description</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a asp-action="Edit" asp-route-id="@item.BookId" class="btn btn-warning btn-sm">
+                                                <i class="fas fa-edit me-1"></i>Edit
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.BookId" onclick="return confirm('Are you sure you want to delete this book?')" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash me-1"></i>Delete
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- No Results Message -->
+                <div class="no-results" id="noResults" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h4>No Books Found</h4>
+                    <p class="text-muted">No books match your search criteria. Try different keywords.</p>
+                    <button class="btn btn-primary mt-2" id="clearSearch2" type="button">
+                        <i class="fas fa-times me-2"></i>Clear Search
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const clearSearch = document.getElementById('clearSearch');
+            const clearSearch2 = document.getElementById('clearSearch2');
+            const booksTableBody = document.getElementById('booksTableBody');
+            const noResults = document.getElementById('noResults');
+            const searchInfo = document.getElementById('searchInfo');
+            const searchInfoText = document.getElementById('searchInfoText');
+            const bookRows = document.querySelectorAll('.book-row');
+            const totalBooks = document.getElementById('totalBooks');
+            const totalAuthors = document.getElementById('totalAuthors');
+            const totalGenres = document.getElementById('totalGenres');
+            const totalQuantity = document.getElementById('totalQuantity');
+
+            console.log('Search functionality initialized');
+            console.log('Total books found:', bookRows.length);
+
+            // Function to perform search
+            function performSearch() {
+                console.log('Performing search...');
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                console.log('Search term:', searchTerm);
+
+                let visibleCount = 0;
+                let hasResults = false;
+
+                if (searchTerm === '') {
+                    console.log('Empty search, showing all books');
+                    // Show all rows if search is empty
+                    bookRows.forEach(row => {
+                        row.style.display = '';
+                        visibleCount++;
+                    });
+                    searchInfo.style.display = 'none';
+                    clearSearch.style.display = 'none';
+                    noResults.style.display = 'none';
+                    updateStats();
+                    return;
+                }
+
+                // Search through books
+                bookRows.forEach(row => {
+                    const bookName = row.getAttribute('data-bookname') || '';
+                    const author = row.getAttribute('data-author') || '';
+                    const genre = row.getAttribute('data-genre') || '';
+
+                    console.log('Checking row:', {
+                        bookName: bookName,
+                        author: author,
+                        genre: genre,
+                        searchTerm: searchTerm
+                    });
+
+                    if (bookName.includes(searchTerm) ||
+                        author.includes(searchTerm) ||
+                        genre.includes(searchTerm)) {
+                        row.style.display = '';
+                        visibleCount++;
+                        hasResults = true;
+                        console.log('Row matches search:', row);
+
+                        // Highlight matching text
+                        highlightText(row, searchTerm);
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                console.log('Search results:', {
+                    visibleCount: visibleCount,
+                    hasResults: hasResults
+                });
+
+                // Show/hide no results message
+                if (!hasResults) {
+                    noResults.style.display = 'block';
+                    searchInfo.style.display = 'none';
+                    console.log('No results found');
+                } else {
+                    noResults.style.display = 'none';
+                    searchInfo.style.display = 'block';
+                    searchInfoText.textContent = `Found ${visibleCount} book(s) matching "${searchTerm}"`;
+                    console.log('Results found:', visibleCount);
+                }
+
+                clearSearch.style.display = 'block';
+                updateStats(visibleCount);
+            }
+
+            // Function to highlight matching text
+            function highlightText(row, searchTerm) {
+                const cells = row.querySelectorAll('.book-name, .author, .genre');
+                cells.forEach(cell => {
+                    const originalText = cell.textContent;
+                    const regex = new RegExp(`(${searchTerm})`, 'gi');
+                    const highlightedText = originalText.replace(regex, '<span class="highlight">$1</span>');
+                    cell.innerHTML = highlightedText;
+                });
+            }
+
+            // Function to update stats
+            function updateStats(visibleCount = null) {
+                if (visibleCount !== null) {
+                    totalBooks.textContent = visibleCount;
+                    // For demo purposes, we're not recalculating authors and genres
+                    // In a real app, you'd want to recalculate these based on visible rows
+                } else {
+                    totalBooks.textContent = '@Model.Count';
+                    totalAuthors.textContent = '@Model.Select(b => b.Author).Distinct().Count()';
+                    totalGenres.textContent = '@Model.Select(b => b.Genre).Distinct().Count()';
+                    totalQuantity.textContent = '@Model.Sum(b => b.Quantity)';
+                }
+            }
+
+            // Function to clear search
+            function clearSearchFunction() {
+                console.log('Clearing search');
+                searchInput.value = '';
+
+                // Remove highlights
+                document.querySelectorAll('.highlight').forEach(highlight => {
+                    const parent = highlight.parentNode;
+                    parent.textContent = parent.textContent;
+                });
+
+                performSearch();
+            }
+
+            // Event listeners
+            searchBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Search button clicked');
+                performSearch();
+            });
+
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    console.log('Enter key pressed');
+                    performSearch();
+                }
+            });
+
+            clearSearch.addEventListener('click', function(e) {
+                e.preventDefault();
+                clearSearchFunction();
+            });
+
+            clearSearch2.addEventListener('click', function(e) {
+                e.preventDefault();
+                clearSearchFunction();
+            });
+
+            // Real-time search (optional - uncomment if you want search-as-you-type)
+            searchInput.addEventListener('input', function() {
+                console.log('Input changed');
+                performSearch();
+            });
+
+            // Initialize
+            updateStats();
+            console.log('Search functionality ready');
+        });
+    </script>
+</body>
+</html>

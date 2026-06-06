@@ -1,0 +1,77 @@
+﻿@model List<Library_Management_System.Models.ViewModels.BorrowViewModel>
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Book</th>
+                    <th>Student</th>
+                    <th>Request Date</th>
+                    <th>Duration</th>
+                    <th>Purpose</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td>#@request.BorrowId</td>
+                        <td>
+                            <strong>@request.BookTitle</strong><br>
+                            <small class="text-muted">@request.BookAuthor</small>
+                        </td>
+                        <td>@request.StudentName</td>
+                        <td>@request.RequestDate.("yyyy-MM-dd")</td>
+                        <td>@request.BorrowDurationDays days</td>
+                        <td>@request.Purpose</td>
+                        <td>
+                            @if (request.Status == "Pending")
+                            {
+                                <span class="badge bg-warning">@request.Status</span>
+                            }
+                            else if (request.Status == "Approved")
+                            {
+                                <span class="badge bg-success">@request.Status</span>
+                            }
+                            else if (request.Status == "Rejected")
+                            {
+                                <span class="badge bg-danger">@request.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@request.Status</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                @if (request.Status == "Pending")
+                                {
+                                    <button class="btn btn-success" onclick="approveRequest(@request.BorrowId)">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button class="btn btn-danger" onclick="rejectRequest(@request.BorrowId)">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                }
+                                <button class="btn btn-info" onclick="viewDetails(@request.BorrowId)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i> No borrow requests found.
+    </div>
+}

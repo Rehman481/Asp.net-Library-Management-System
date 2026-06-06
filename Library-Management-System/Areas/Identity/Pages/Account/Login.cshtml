@@ -1,0 +1,223 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Login Card -->
+            <div class="card shadow-lg border-0">
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white py-4">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-25 rounded-circle p-3 me-3">
+                            <i class="fas fa-book fa-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="h4 mb-1">Library Management System</h1>
+                            <p class="mb-0 opacity-75">Sign in to your account</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4 p-md-5">
+                    <!-- Login Form -->
+                    <form id="account" method="post">
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Please correct the errors below
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="mb-4">
+                            <label asp-for="Input.Email" class="form-label fw-semibold">
+                                <i class="fas fa-envelope me-2 text-primary"></i>Email Address
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-user text-muted"></i>
+                                </span>
+                                <input asp-for="Input.Email" class="form-control"
+                                       autocomplete="username"
+                                       aria-required="true"
+                                       placeholder="Enter your email">
+                            </div>
+                            <span asp-validation-for="Input.Email" class="text-danger small mt-1"></span>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label asp-for="Input.Password" class="form-label fw-semibold">
+                                    <i class="fas fa-lock me-2 text-primary"></i>Password
+                                </label>
+                                <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none small">
+                                    <i class="fas fa-key me-1"></i>Forgot password?
+                                </a>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-key text-muted"></i>
+                                </span>
+                                <input asp-for="Input.Password" class="form-control"
+                                       autocomplete="current-password"
+                                       aria-required="true"
+                                       placeholder="Enter your password">
+                            </div>
+                            <span asp-validation-for="Input.Password" class="text-danger small mt-1"></span>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="Input.RememberMe" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">
+                                    <i class="fas fa-check-circle me-2 text-primary"></i>
+                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid mb-4">
+                            <button id="login-submit" type="submit" class="btn btn-primary btn-lg py-3">
+                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                            </button>
+                        </div>
+
+                        <!-- Registration Link -->
+                        <div class="text-center pt-3 border-top">
+                            <p class="text-muted mb-2">Don't have an account?</p>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"
+                               class="btn btn-outline-primary">
+                                <i class="fas fa-user-plus me-2"></i>Create New Account
+                            </a>
+                        </div>
+
+                        <!-- Email Confirmation -->
+                        <div class="text-center mt-3">
+                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation"
+                               class="text-decoration-none small text-muted">
+                                <i class="fas fa-envelope me-1"></i>Resend email confirmation
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- External Logins (if any) -->
+            @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+            {
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h5 class="text-center mb-3">Or sign in with</h5>
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div class="d-grid gap-2">
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-outline-secondary" name="provider" value="@provider.Name">
+                                        <i class="fab fa-@provider.DisplayName.ToLower() me-2"></i>
+                                        @provider.DisplayName
+                                    </button>
+                                }
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Simple, clean styles */
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: none;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        border-color: #3498db;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+    }
+
+    .form-check-input:checked {
+        background-color: #3498db;
+        border-color: #3498db;
+    }
+
+    .alert-danger {
+        background-color: rgba(231, 76, 60, 0.1);
+        border-color: rgba(231, 76, 60, 0.25);
+        color: #e74c3c;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Simple JavaScript - no complex logic that could break
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add basic form styling on focus
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.parentElement.classList.add('focused');
+                });
+
+                input.addEventListener('blur', function() {
+                    this.parentElement.parentElement.classList.remove('focused');
+                });
+            });
+
+            // Simple button loading state
+            const submitBtn = document.getElementById('login-submit');
+            const form = document.getElementById('account');
+
+            if (submitBtn && form) {
+                form.addEventListener('submit', function() {
+                    // Only show loading if form is valid
+                    if (form.checkValidity()) {
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing in...';
+                        submitBtn.disabled = true;
+
+                        // Reset button after 10 seconds if still disabled
+                        setTimeout(function() {
+                            if (submitBtn.disabled) {
+                                submitBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Sign In';
+                                submitBtn.disabled = false;
+                            }
+                        }, 10000);
+                    }
+                });
+            }
+        });
+    </script>
+}

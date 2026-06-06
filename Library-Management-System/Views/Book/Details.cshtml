@@ -1,0 +1,543 @@
+﻿@model Library_Management_System.Models.Book
+
+@{
+    ViewData["Title"] = "Book Details - " + Model.BookName;
+    Layout = "_Layout";
+}
+
+<div class="container-fluid px-4 py-4">
+    <!-- Header with Back Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-action="Catalog">Book Catalog</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.BookName</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0 text-primary fw-bold">Book Details</h1>
+        </div>
+        <a asp-action="Catalog" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i> Back to Catalog
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Left Column - Book Cover & Quick Info -->
+        <div class="col-lg-4 col-xl-3 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <!-- Book Cover -->
+                    <div class="book-cover-container text-center mb-4">
+                        <div class="book-cover-placeholder rounded-3 d-inline-flex align-items-center justify-content-center bg-gradient-primary text-white mb-3" style="width: 200px; height: 280px;">
+                            <i class="fas fa-book-open fa-4x"></i>
+                        </div>
+                        <div class="book-badge mb-3">
+                            @if (Model.Quantity > 3)
+                            {
+                                <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-3 py-2 rounded-pill">
+                                    <i class="fas fa-check-circle me-1"></i> Available
+                                </span>
+                            }
+                            else if (Model.Quantity > 0)
+                            {
+                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> Limited Stock
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle px-3 py-2 rounded-pill">
+                                    <i class="fas fa-times-circle me-1"></i> Out of Stock
+                                </span>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="text-center p-3 bg-light rounded-3">
+                                <div class="text-muted small mb-1">Book ID</div>
+                                <div class="h5 fw-bold text-primary">#@Model.BookId</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center p-3 bg-light rounded-3">
+                                <div class="text-muted small mb-1">Copies</div>
+                                <div class="h5 fw-bold @(Model.Quantity > 3 ? "text-success" : Model.Quantity > 0 ? "text-warning" : "text-danger")">
+                                    @Model.Quantity
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Primary Action Buttons -->
+                    <div class="d-grid gap-2">
+                        @if (Model.Quantity > 0)
+                        {
+                            <a asp-controller="Borrow"
+                               asp-action="Create"
+                               asp-route-bookId="@Model.BookId"
+                               class="btn btn-primary btn-lg">
+                                <i class="fas fa-book-reader me-2"></i> Borrow This Book
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-secondary btn-lg" disabled>
+                                <i class="fas fa-clock me-2"></i> Currently Unavailable
+                            </button>
+                        }
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                        {
+                            <div class="btn-group w-100" role="group">
+                                <a asp-action="Edit"
+                                   asp-route-id="@Model.BookId"
+                                   class="btn btn-outline-warning">
+                                    <i class="fas fa-edit me-2"></i> Edit
+                                </a>
+                                <a asp-action="Delete"
+                                   asp-route-id="@Model.BookId"
+                                   class="btn btn-outline-danger">
+                                    <i class="fas fa-trash me-2"></i> Delete
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Detailed Information -->
+        <div class="col-lg-8 col-xl-9">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <!-- Book Title -->
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h2 class="h1 fw-bold text-dark mb-2">@Model.BookName</h2>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-user-edit me-2"></i>@Model.Author
+                            </p>
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-6 px-3 py-2">
+                            @Model.Genre
+                        </span>
+                    </div>
+
+                    <!-- Book Information Cards -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light-subtle h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-primary-subtle p-3 rounded-circle me-3">
+                                            <i class="fas fa-user text-primary fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1 text-muted">Author</h6>
+                                            <h4 class="mb-0 fw-bold">@Model.Author</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light-subtle h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-info-subtle p-3 rounded-circle me-3">
+                                            <i class="fas fa-calendar text-info fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1 text-muted">Publication Year</h6>
+                                            <h4 class="mb-0 fw-bold">@Model.PublicationYear</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description Section - ONLY SHOW IF DESCRIPTION EXISTS -->
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="mb-5">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h4 class="fw-bold mb-0">
+                                    <i class="fas fa-align-left text-primary me-2"></i>Description
+                                </h4>
+                                <span class="badge bg-secondary-subtle text-secondary">Details</span>
+                            </div>
+                            <div class="card border-0 bg-light-subtle">
+                                <div class="card-body p-4">
+                                    <p class="lead mb-0">@Model.Description</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Additional Information Grid -->
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card border-0 h-100">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-circle bg-success-subtle text-success mb-3 mx-auto">
+                                        <i class="fas fa-box-open fa-2x"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Inventory Status</h5>
+                                    <p class="text-muted mb-0">
+                                        @if (Model.Quantity > 3)
+                                        {
+                                            <span class="text-success">In Stock</span>
+                                        }
+                                        else if (Model.Quantity > 0)
+                                        {
+                                            <span class="text-warning">Low Stock</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">Out of Stock</span>
+                                        }
+                                    </p>
+                                    <div class="mt-2">
+                                        <span class="h4 fw-bold @(Model.Quantity > 3 ? "text-success" : Model.Quantity > 0 ? "text-warning" : "text-danger")">
+                                            @Model.Quantity copies
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 h-100">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-circle bg-primary-subtle text-primary mb-3 mx-auto">
+                                        <i class="fas fa-hashtag fa-2x"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Book ID</h5>
+                                    <p class="text-muted mb-0">Unique Identifier</p>
+                                    <div class="mt-2">
+                                        <span class="h4 fw-bold text-dark">#@Model.BookId</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 h-100">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-circle bg-info-subtle text-info mb-3 mx-auto">
+                                        <i class="fas fa-layer-group fa-2x"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Category</h5>
+                                    <p class="text-muted mb-0">Book Genre</p>
+                                    <div class="mt-2">
+                                        <span class="h4 fw-bold text-dark">@Model.Genre</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Footer -->
+                    <div class="mt-5 pt-4 border-top">
+                        <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Last updated: @DateTime.Now.ToString("MMM dd, yyyy")
+                                </small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a asp-action="Catalog" class="btn btn-outline-secondary">
+                                    <i class="fas fa-list me-2"></i> View All Books
+                                </a>
+                                @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-warning">
+                                        <i class="fas fa-edit me-2"></i> Edit Details
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional CSS with Navy Blue/Ocean Blue Theme -->
+<style>
+    :root {
+        --bs-primary: #1a56db; /* Navy Blue Primary */
+        --bs-primary-rgb: 26, 86, 219;
+        --bs-primary-subtle: rgba(26, 86, 219, 0.1);
+        --bs-secondary: #3b82f6; /* Ocean Blue Secondary */
+        --bs-secondary-rgb: 59, 130, 246;
+        --bs-success-subtle: rgba(34, 197, 94, 0.1);
+        --bs-warning-subtle: rgba(245, 158, 11, 0.1);
+        --bs-danger-subtle: rgba(239, 68, 68, 0.1);
+        --bs-info-subtle: rgba(6, 182, 212, 0.1);
+        --bs-light-subtle: rgba(249, 250, 251, 0.8);
+    }
+
+    body {
+        background: linear-gradient(135deg, #0c4a6e 0%, #1d4ed8 50%, #60a5fa 100%);
+        min-height: 100vh;
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-attachment: fixed;
+    }
+
+    .container-fluid {
+        max-width: 1400px;
+    }
+
+    .card {
+        border-radius: 16px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        background: rgba(255, 255, 255, 0.98);
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(26, 86, 219, 0.15) !important;
+        }
+
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%) !important;
+    }
+
+    .bg-light-subtle {
+        background-color: rgba(249, 250, 251, 0.8) !important;
+        backdrop-filter: blur(10px);
+    }
+
+    .book-cover-placeholder {
+        box-shadow: 0 10px 30px rgba(26, 86, 219, 0.2);
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%) !important;
+    }
+
+        .book-cover-placeholder:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(26, 86, 219, 0.3);
+        }
+
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%);
+        color: white;
+        box-shadow: 0 5px 15px rgba(26, 86, 219, 0.2);
+    }
+
+        .icon-circle.bg-primary-subtle {
+            background: linear-gradient(135deg, rgba(26, 86, 219, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            color: #1a56db;
+        }
+
+        .icon-circle.bg-success-subtle {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            color: #059669;
+        }
+
+        .icon-circle.bg-info-subtle {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%);
+            color: #0891b2;
+        }
+
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+    }
+
+    .breadcrumb-item a {
+        color: #1a56db;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+
+        .breadcrumb-item a:hover {
+            color: #1e40af;
+            text-decoration: underline;
+        }
+
+    .breadcrumb-item.active {
+        color: #6b7280;
+    }
+
+    .btn {
+        border-radius: 10px;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(26, 86, 219, 0.3);
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(26, 86, 219, 0.4);
+        }
+
+    .btn-outline-primary {
+        color: #1a56db;
+        border: 2px solid #1a56db;
+        background: transparent;
+    }
+
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%);
+            border-color: transparent;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(26, 86, 219, 0.3);
+        }
+
+    .btn-outline-secondary {
+        color: #6b7280;
+        border: 2px solid #d1d5db;
+        background: transparent;
+    }
+
+        .btn-outline-secondary:hover {
+            background: #6b7280;
+            border-color: #6b7280;
+            color: white;
+        }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        border: none;
+        color: white;
+    }
+
+    .btn-outline-warning {
+        color: #f59e0b;
+        border: 2px solid #f59e0b;
+    }
+
+    .btn-outline-danger {
+        color: #dc2626;
+        border: 2px solid #dc2626;
+    }
+
+    .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    .badge {
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        letter-spacing: -0.025em;
+    }
+
+    .h1 {
+        font-size: 2.5rem;
+        color: #111827;
+    }
+
+    .h2 {
+        color: #111827;
+    }
+
+    .lead {
+        line-height: 1.7;
+        font-size: 1.1rem;
+        color: #374151;
+    }
+
+    .text-primary {
+        color: #1a56db !important;
+    }
+
+    .border-top {
+        border-top: 1px solid #e5e7eb !important;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .container-fluid {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .h1 {
+            font-size: 2rem;
+        }
+
+        .book-cover-placeholder {
+            width: 150px !important;
+            height: 210px !important;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+        }
+
+        .btn-lg {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+            .d-flex.justify-content-between .btn {
+                width: 100%;
+            }
+
+        .row.g-4 > div {
+            margin-bottom: 1rem;
+        }
+    }
+
+    /* Custom card border effects */
+    .card.border-0.bg-light-subtle {
+        border-left: 4px solid #1a56db;
+    }
+
+    /* Smooth scroll behavior */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(26, 86, 219, 0.1);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%);
+        border-radius: 5px;
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+        }
+</style>

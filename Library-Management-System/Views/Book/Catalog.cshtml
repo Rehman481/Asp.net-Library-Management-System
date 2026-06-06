@@ -1,0 +1,945 @@
+﻿@model IEnumerable<Library_Management_System.Models.Book>
+
+@{
+    ViewData["Title"] = "Book Catalog - Library Management System";
+    var booksPerPage = 8;
+    var totalBooks = Model.Count();
+    var totalPages = (int)Math.Ceiling((double)totalBooks / booksPerPage);
+    var currentPage = Context.Request.Query["page"].ToString() != "" ?
+                     int.Parse(Context.Request.Query["page"]) : 1;
+    var startIndex = (currentPage - 1) * booksPerPage;
+    var paginatedBooks = Model.Skip(startIndex).Take(booksPerPage);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #7c3aed;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--dark-color);
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+            .header-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+        .header-title {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            max-width: 500px;
+            margin-left: auto;
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+            .search-input:focus {
+                background: rgba(255, 255, 255, 0.25);
+                border-color: rgba(255, 255, 255, 0.5);
+                box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+                color: white;
+            }
+
+            .search-input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+        .search-btn {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* Book Card */
+        .book-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            height: 100%;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+            .book-card:hover {
+                transform: translateY(-8px);
+                box-shadow: var(--box-shadow);
+                border-color: var(--primary-color);
+            }
+
+        .book-cover {
+            height: 160px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .book-cover i {
+                font-size: 3.5rem;
+                opacity: 0.9;
+            }
+
+            .book-cover::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 100%);
+            }
+
+        .book-content {
+            padding: 1.5rem;
+        }
+
+        .book-title {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            line-height: 1.4;
+            color: var(--dark-color);
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .book-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+            .book-meta i {
+                width: 16px;
+                text-align: center;
+                color: var(--primary-color);
+            }
+
+        /* Status Indicators */
+        .quantity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .quantity-good {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .quantity-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .quantity-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .quantity-full {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: var(--transition);
+            flex: 1;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+            }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: var(--transition);
+            flex: 1;
+        }
+
+            .btn-outline:hover {
+                background: var(--primary-color);
+                color: white;
+                transform: translateY(-2px);
+            }
+
+        .btn-disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: not-allowed;
+            flex: 1;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 3rem;
+        }
+
+        .page-item.active .page-link {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .page-link {
+            color: var(--primary-color);
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1.25rem;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+            .page-link:hover {
+                background: rgba(37, 99, 235, 0.1);
+                border-color: var(--primary-color);
+            }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .admin-title {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary-color);
+        }
+
+            .stat-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+        }
+
+        /* Filter Controls */
+        .filter-controls {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            color: #64748b;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+            .filter-btn.active {
+                background: var(--primary-color);
+                color: white;
+                border-color: var(--primary-color);
+            }
+
+            .filter-btn:hover:not(.active) {
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+            }
+
+        
+        .search-container {
+            max-width: 100%;
+            margin-left: 0;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #94a3b8;
+            }
+    </style>
+</head>
+
+<body class="py-4">
+
+    <div class="container-xxl">
+
+        <!-- HEADER -->
+        <div class="header-card animate__animated animate__fadeIn">
+            <div class="card-body p-4 p-md-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-7">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-white rounded-circle p-3 me-3">
+                                <i class="fas fa-book-open text-primary fs-4"></i>
+                            </div>
+                            <div>
+                                <h1 class="header-title text-white mb-2">Book Catalog</h1>
+                                <p class="text-white opacity-90 mb-0">
+                                    Browse our collection of @totalBooks books. Showing
+                                    <span class="fw-semibold">@((currentPage - 1) * booksPerPage + 1)-@Math.Min(currentPage * booksPerPage, totalBooks)</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEARCH BAR -->
+                    <div class="col-lg-5">
+                        <div class="search-container">
+                            <input type="text"
+                                   class="form-control search-input"
+                                   id="searchInput"
+                                   placeholder="Search books by title, author, or genre..."
+                                   aria-label="Search books">
+                            <button class="search-btn" id="searchBtn" aria-label="Search">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid fade-in">
+            <div class="stat-card">
+                <div class="stat-label">Total Books</div>
+                <div class="stat-value">@totalBooks</div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fas fa-book me-2 text-primary"></i>
+                    <small class="text-muted">In collection</small>
+                </div>
+            </div>
+            @{
+                var availableBooks = Model.Count(b => b.Quantity > 0);
+                var fullStockBooks = Model.Count(b => b.Quantity >= 5);
+            }
+            <div class="stat-card">
+                <div class="stat-label">Available Now</div>
+                <div class="stat-value">@availableBooks</div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fas fa-check-circle me-2 text-success"></i>
+                    <small class="text-muted">Ready to borrow</small>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Full Stock</div>
+                <div class="stat-value">@fullStockBooks</div>
+                <div class="d-flex align-items-center mt-2">
+                    <i class="fas fa-box-full me-2 text-secondary"></i>
+                    <small class="text-muted">5+ copies available</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTER CONTROLS -->
+        <div class="filter-controls fade-in">
+            <div class="filter-group">
+                <span class="fw-semibold me-2">Filter by:</span>
+                <button class="filter-btn active" data-filter="all">All Books</button>
+                <button class="filter-btn" data-filter="available">Available</button>
+                <button class="filter-btn" data-filter="full">Full Stock</button>
+                <button class="filter-btn" data-filter="low">Low Stock</button>
+            </div>
+        </div>
+
+        <!-- ADMIN PANEL -->
+        @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+        {
+            <div class="admin-panel fade-in">
+                <h5 class="admin-title">
+                    <i class="fas fa-user-shield text-primary"></i>
+                    Library Administration
+                </h5>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a asp-controller="Borrow" asp-action="Index" class="btn btn-outline">
+                        <i class="fas fa-list-check me-2"></i> Manage Borrowings
+                    </a>
+                    <a asp-controller="Borrow" asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i> New Borrowing
+                    </a>
+                    <a asp-controller="Book" asp-action="Create" class="btn btn-outline">
+                        <i class="fas fa-book-medical me-2"></i> Add New Book
+                    </a>
+                </div>
+            </div>
+        }
+
+        <!-- BOOKS GRID -->
+        <div class="row g-4" id="booksGrid">
+            @foreach (var book in paginatedBooks)
+            {
+                var isAvailable = book.Quantity > 0;
+                var quantityStatus = book.Quantity switch
+                {
+                    >= 5 => "quantity-full",
+                    >= 3 => "quantity-good",
+                    >= 1 => "quantity-warning",
+                    _ => "quantity-danger"
+                };
+
+                var statusText = book.Quantity switch
+                {
+                    >= 5 => "Full Stock",
+                    >= 3 => "Available",
+                    >= 1 => "Limited",
+                    _ => "Out of Stock"
+                };
+
+                <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 book-card-container fade-in"
+                     data-title="@book.BookName?.ToLower()"
+                     data-author="@book.Author?.ToLower()"
+                     data-genre="@book.Genre?.ToLower()"
+                     data-book-id="@book.BookId"
+                     data-available="@isAvailable.ToString().ToLower()"
+                     data-quantity="@book.Quantity"
+                     data-stock="@(book.Quantity >= 5 ? "full" : book.Quantity >= 3 ? "good" : book.Quantity >= 1 ? "low" : "none")">
+
+                    <div class="book-card h-100">
+                        <div class="book-cover">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+
+                        <div class="book-content">
+                            <h3 class="book-title">@book.BookName</h3>
+
+                            <div class="book-meta">
+                                <i class="fas fa-user-edit"></i>
+                                <span class="text-truncate">@book.Author</span>
+                            </div>
+
+                            <div class="book-meta">
+                                <i class="fas fa-tag"></i>
+                                <span>@book.Genre</span>
+                            </div>
+
+                            <div class="book-meta">
+                                <i class="fas fa-calendar"></i>
+                                <span>Published: @book.PublicationYear</span>
+                            </div>
+
+                            <div class="quantity-badge @quantityStatus">
+                                <i class="fas fa-box"></i>
+                                <span>@book.Quantity copies • @statusText</span>
+                            </div>
+
+                            <div class="action-buttons">
+                                @if (isAvailable)
+                                {
+                                    <a asp-controller="Borrow"
+                                       asp-action="Create"
+                                       asp-route-bookId="@book.BookId"
+                                       class="btn btn-primary">
+                                        <i class="fas fa-book-reader me-2"></i>
+                                        Borrow
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-disabled" disabled>
+                                        <i class="fas fa-times-circle me-2"></i>
+                                        Unavailable
+                                    </button>
+                                }
+
+                                <a asp-controller="Book"
+                                   asp-action="Details"
+                                   asp-route-id="@book.BookId"
+                                   class="btn btn-outline">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Details
+                                </a>
+                            </div>
+
+                            @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                            {
+                                <div class="mt-3 pt-3 border-top">
+                                    <div class="d-flex gap-2">
+                                        <a asp-controller="Book"
+                                           asp-action="Edit"
+                                           asp-route-id="@book.BookId"
+                                           class="btn btn-sm btn-outline flex-grow-1">
+                                            <i class="fas fa-edit me-1"></i> Edit
+                                        </a>
+                                        <a asp-controller="Book"
+                                           asp-action="Delete"
+                                           asp-route-id="@book.BookId"
+                                           class="btn btn-sm btn-outline-danger flex-grow-1"
+                                           onclick="return confirm('Are you sure you want to delete this book?')">
+                                            <i class="fas fa-trash me-1"></i> Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state" id="noResults" style="display:none;">
+            <div class="empty-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="mb-3">No Books Found</h3>
+            <p class="text-muted mb-4">Try adjusting your search or filter to find what you're looking for.</p>
+            <button class="btn btn-primary" id="clearSearch">
+                <i class="fas fa-times me-2"></i>Clear Search
+            </button>
+        </div>
+
+        <!-- PAGINATION -->
+        @if (totalPages > 1)
+        {
+            <div class="pagination-container fade-in">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <span class="text-muted">Page @currentPage of @totalPages</span>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted">Showing @Math.Min(booksPerPage, totalBooks - startIndex) items per page</small>
+                    </div>
+                </div>
+
+                <nav aria-label="Book catalog pagination">
+                    <ul class="pagination justify-content-center mb-0">
+                        <!-- First Page -->
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?page=1" aria-label="First">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                        </li>
+
+                        <!-- Previous Page -->
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?page=@(currentPage - 1)" aria-label="Previous">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+
+                        <!-- Page Numbers -->
+                        @{
+                            int startPage = Math.Max(1, currentPage - 1);
+                            int endPage = Math.Min(totalPages, currentPage + 1);
+
+                            if (startPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">1</a>
+                                </li>
+                                @if (startPage > 2)
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                }
+                            }
+
+                            for (int i = startPage; i <= endPage; i++)
+                            {
+                                <li class="page-item @(i == currentPage ? "active" : "")">
+                                    <a class="page-link" href="?page=@i">@i</a>
+                                </li>
+                            }
+
+                            if (endPage < totalPages)
+                            {
+                                @if (endPage < totalPages - 1)
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                }
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=@totalPages">@totalPages</a>
+                                </li>
+                            }
+                        }
+
+                        <!-- Next Page -->
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="?page=@(currentPage + 1)" aria-label="Next">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+
+                        <!-- Last Page -->
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="?page=@totalPages" aria-label="Last">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    
+
+    <script>
+        $(document).ready(function () {
+            const searchInput = $('#searchInput');
+            const searchBtn = $('#searchBtn');
+            const clearSearch = $('#clearSearch');
+            const booksGrid = $('#booksGrid');
+            const noResults = $('#noResults');
+            const filterButtons = $('.filter-btn');
+            const bookCards = $('.book-card-container');
+
+            // Initialize tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+
+            // Search function
+            function performSearch() {
+                const searchTerm = searchInput.val().toLowerCase().trim();
+                const activeFilter = $('.filter-btn.active').data('filter');
+
+                let visibleCount = 0;
+
+                bookCards.each(function() {
+                    const $card = $(this);
+                    const title = $card.data('title') || '';
+                    const author = $card.data('author') || '';
+                    const genre = $card.data('genre') || '';
+                    const quantity = parseInt($card.data('quantity')) || 0;
+                    const isAvailable = quantity > 0;
+                    const stockStatus = $card.data('stock') || '';
+
+                    const matchesSearch =
+                        title.includes(searchTerm) ||
+                        author.includes(searchTerm) ||
+                        genre.includes(searchTerm);
+
+                    let matchesFilter = true;
+
+                    switch (activeFilter) {
+                        case 'available':
+                            matchesFilter = isAvailable;
+                            break;
+                        case 'full':
+                            matchesFilter = stockStatus === 'full';
+                            break;
+                        case 'low':
+                            matchesFilter = stockStatus === 'low';
+                            break;
+                        case 'all':
+                        default:
+                            matchesFilter = true;
+                            break;
+                    }
+
+                    if (matchesSearch && matchesFilter) {
+                        $card.fadeIn(300);
+                        visibleCount++;
+                    } else {
+                        $card.fadeOut(300);
+                    }
+                });
+
+                // Show/hide no results message
+                if (visibleCount === 0) {
+                    noResults.fadeIn(300);
+                    booksGrid.fadeOut(300);
+                } else {
+                    noResults.fadeOut(300);
+                    booksGrid.fadeIn(300);
+                }
+            }
+
+            // Filter button click handler
+            filterButtons.click(function() {
+                filterButtons.removeClass('active');
+                $(this).addClass('active');
+                performSearch();
+            });
+
+            // Search event handlers
+            searchBtn.click(performSearch);
+            searchInput.on('input', performSearch);
+
+            // Clear search
+            clearSearch.click(function() {
+                searchInput.val('');
+                $('.filter-btn[data-filter="all"]').click();
+                performSearch();
+            });
+
+            // Enter key for search
+            searchInput.keypress(function(e) {
+                if (e.which === 13) {
+                    performSearch();
+                }
+            });
+
+            // Quantity alert for full stock books
+            bookCards.each(function() {
+                const $card = $(this);
+                const quantity = parseInt($card.data('quantity')) || 0;
+                const bookTitle = $card.find('.book-title').text();
+
+                // Add full stock badge if quantity >= 5
+                if (quantity >= 5) {
+                    const $cover = $card.find('.book-cover');
+                    if (!$cover.find('.full-stock-badge').length) {
+                        $cover.append(
+                            '<div class="full-stock-badge position-absolute top-0 end-0 m-2">' +
+                            '<span class="badge bg-success px-2 py-1">' +
+                            '<i class="fas fa-check-circle me-1"></i>Full Stock' +
+                            '</span></div>'
+                        );
+                    }
+
+                    // Add click alert for full stock books
+                    const $borrowBtn = $card.find('.btn-primary');
+                    if ($borrowBtn.length && !$borrowBtn.hasClass('disabled')) {
+                        $borrowBtn.off('click.alert').on('click.alert', function(e) {
+                            if (!$(this).hasClass('disabled')) {
+                                alert(`📚 "${bookTitle}"\n\n✅ This book has full stock (${quantity} copies available).\n\nYou can proceed with borrowing.`);
+                            }
+                        });
+                    }
+                }
+
+                // Add low stock warning if quantity is 1-2
+                if (quantity > 0 && quantity <= 2) {
+                    const $cover = $card.find('.book-cover');
+                    if (!$cover.find('.low-stock-badge').length) {
+                        $cover.append(
+                            '<div class="low-stock-badge position-absolute top-0 start-0 m-2">' +
+                            '<span class="badge bg-warning text-dark px-2 py-1">' +
+                            '<i class="fas fa-exclamation-triangle me-1"></i>Low Stock' +
+                            '</span></div>'
+                        );
+                    }
+                }
+            });
+
+            // Add animation on scroll
+            function animateOnScroll() {
+                $('.fade-in').each(function() {
+                    const elementTop = $(this).offset().top;
+                    const elementBottom = elementTop + $(this).outerHeight();
+                    const viewportTop = $(window).scrollTop();
+                    const viewportBottom = viewportTop + $(window).height();
+
+                    if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                        $(this).addClass('animate__animated animate__fadeInUp');
+                    }
+                });
+            }
+
+            $(window).on('scroll', animateOnScroll);
+            animateOnScroll(); // Initial check
+
+            // Initialize with active filter
+            performSearch();
+        });
+    </script>
+</body>
+</html>

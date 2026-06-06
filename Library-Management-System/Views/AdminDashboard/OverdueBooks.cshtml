@@ -1,0 +1,141 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<Library_Management_System.Models.Borrow>
+@{
+    ViewData["Title"] = "Overdue Books";
+    var today = DateTime.Now;
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center py-3">
+        <h1 class="h3 mb-0"><i class="fas fa-exclamation-triangle me-2 text-danger"></i>Overdue Books</h1>
+        <div>
+            <a href="/AdminDashboard" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="alert alert-warning">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>@Model.Count books are overdue.</strong> Consider contacting students.
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
+                <h3 class="text-success">No Overdue Books</h3>
+                <p class="text-muted">All books have been returned on time.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Overdue Books List</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Student</th>
+                                <th>Book ID</th>
+                                <th>Borrow Date</th>
+                                <th>Due Date</th>
+                                <th>Days Overdue</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var borrow in Model)
+                            {
+                                var daysOverdue = (today.Date - borrow.DueDate?.Date)?.Days ?? 0;
+
+                                <tr class="@(daysOverdue > 7 ? "table-danger" : "table-warning")">
+                                    <td>
+                                        <strong>@borrow.StudentName</strong><br>
+                                        <small class="text-muted">ID: @borrow.StudentId.Substring(0, Math.Min(8, borrow.StudentId.Length))...</small>
+                                    </td>
+                                    <td>@borrow.BookId</td>
+                                    <td>@borrow.BorrowDate?.ToString("MMM dd, yyyy")</td>
+                                    <td class="text-danger fw-bold">@borrow.DueDate?.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <span class="badge bg-danger">@daysOverdue days</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning" onclick="notifyStudent('@borrow.StudentId', '@borrow.StudentName', @borrow.BookId, @daysOverdue)">
+                                            <i class="fas fa-bell"></i> Notify
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6>Summary</h6>
+                        <p>Total Overdue Books: <strong>@Model.Count</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-primary text-white">
+            <i class="fas fa-bell me-2"></i>
+            <strong class="me-auto">Notification</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            <!-- Message will appear here -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+
+    <script>
+        // Function to show toast notification
+        function showToast(message) {
+            $('#toastMessage').text(message);
+            const toast = new bootstrap.Toast(document.getElementById('toastNotification'));
+            toast.show();
+        }
+
+        // Send notification about specific book ID
+        async function notifyStudent(studentId, studentName, bookId, daysOverdue) {
+            if (confirm(`Send notification to ${studentName} about Book ID: ${bookId}? It's ${daysOverdue} days overdue.`)) {
+                try {
+                    const connection = new signalR.HubConnectionBuilder()
+                        .withUrl("/notificationHub")
+                        .build();
+
+                    await connection.start();
+
+                    // Send specific message with book ID
+                    await connection.invoke("SendToUser", studentId,
+                        `📚 Book ID ${bookId} is ${daysOverdue} days overdue. Please return it immediately.`);
+
+                    showToast(`Notification sent to ${studentName} about Book ID: ${bookId}`);
+                } catch (err) {
+                    showToast(`Failed to send notification to ${studentName}`);
+                }
+            }
+        }
+    </script>
+}

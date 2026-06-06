@@ -1,0 +1,267 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    ViewData["Title"] = "System Notifications";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center py-3">
+        <h1 class="h3 mb-0"><i class="fas fa-bell me-2"></i>System Notifications</h1>
+        <a href="/AdminDashboard" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Send Notification -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-broadcast-tower me-2"></i>Send Notification</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-action="SendNotification" id="notificationForm">
+                        <div class="mb-3">
+                            <label class="form-label">Notification Type</label>
+                            <select class="form-select" name="notificationType" id="notificationType">
+                                <option value="info">Information</option>
+                                <option value="warning">Warning</option>
+                                <option value="success">Success</option>
+                                <option value="danger">Alert</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Recipient</label>
+                            <select class="form-select" id="recipientType" name="recipientType">
+                                <option value="admins">All Admins</option>
+                                <option value="students">All Students</option>
+                                <option value="specific">Specific Student</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="specificStudentDiv" style="display: none;">
+                            <label class="form-label">Student</label>
+                            <select class="form-select" id="specificStudentId" name="specificStudentId">
+                                <option value="">Select Student</option>
+                                @if (ViewBag.Students != null)
+                                {
+                                    foreach (var student in ViewBag.Students)
+                                    {
+                                        <option value="@student.Id">@student.Name (@student.Email)</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" name="message" id="message" rows="4"
+                                      placeholder="Enter notification message..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Send Notification
+                        </button>
+                        <button type="button" class="btn btn-secondary ms-2" onclick="sendTestNotification()">
+                            <i class="fas fa-bell me-2"></i>Test Notification
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Templates -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Quick Templates</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group" id="templateList">
+                        <!-- Templates will be loaded dynamically -->
+                        @if (ViewBag.Templates != null)
+                        {
+                            foreach (var template in ViewBag.Templates)
+                            {
+                                <button class="list-group-item list-group-item-action"
+                                        onclick="useTemplate('@template.Content')">
+                                    <i class="@template.Icon me-2"></i>@template.Title
+                                </button>
+                            }
+                        }
+                        else
+                        {
+                            <!-- Fallback default templates if none are provided -->
+                            <button class="list-group-item list-group-item-action"
+                                    onclick="useTemplate('Library will close early today at 4 PM for maintenance.')">
+                                <i class="fas fa-tools me-2"></i>Library Maintenance
+                            </button>
+                            <button class="list-group-item list-group-item-action"
+                                    onclick="useTemplate('All books must be returned by Friday for inventory check.')">
+                                <i class="fas fa-clipboard-check me-2"></i>Inventory Notice
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification History -->
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Notifications</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group" id="notificationHistory">
+                        @if (ViewBag.RecentNotifications != null && ViewBag.RecentNotifications.Count > 0)
+                        {
+                            foreach (var notification in ViewBag.RecentNotifications)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">
+                                            @if (notification.Type == "info")
+                                            {
+                                                <text>ℹ️</text>
+                                            }
+                                            else if (notification.Type == "warning")
+                                            {
+
+                                                <text>⚠️</text>
+                                            }
+                                            else if (notification.Type == "success")
+                                            {
+
+                                                <text>✅</text>
+                                            }
+                                            else if (notification.Type == "danger")
+                                            {
+
+                                                <text>🚨</text>
+                                            }
+                                            else
+                                            {
+
+                                                <text>📧</text>
+                                            }
+                                            @notification.Title
+                                        </h6>
+                                        <small>@notification.CreatedAt</small>
+                                    </div>
+                                    <p class="mb-1">@notification.Message</p>
+                                    <small class="text-muted">Sent to: @notification.RecipientType</small>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-3">
+                                <p class="text-muted mb-0">No recent notifications</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/microsoft-signalr/signalr.min.js"></script>
+<script>
+    // Show/hide specific student field
+    document.getElementById('recipientType').addEventListener('change', function() {
+        const specificDiv = document.getElementById('specificStudentDiv');
+        specificDiv.style.display = this.value === 'specific' ? 'block' : 'none';
+
+        // Clear student selection when switching away from specific
+        if (this.value !== 'specific') {
+            document.getElementById('specificStudentId').value = '';
+        }
+    });
+
+    // Use template
+    function useTemplate(template) {
+        document.getElementById('message').value = template;
+        // Focus on the message textarea
+        document.getElementById('message').focus();
+    }
+
+    // Send test notification via SignalR
+    function sendTestNotification() {
+        const recipientType = document.getElementById('recipientType').value;
+        const message = document.getElementById('message').value;
+        const studentId = document.getElementById('specificStudentId')?.value;
+
+        if (!message.trim()) {
+            alert("Please enter a message before sending a test notification.");
+            document.getElementById('message').focus();
+            return;
+        }
+
+        if (recipientType === 'specific' && !studentId) {
+            alert("Please select a student for specific student notification.");
+            document.getElementById('specificStudentId').focus();
+            return;
+        }
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .build();
+
+        connection.start().then(() => {
+            let alertMessage = "";
+
+            switch(recipientType) {
+                case 'admins':
+                    connection.invoke("SendToAdmins", message);
+                    alertMessage = "Test notification sent to all admins!";
+                    break;
+                case 'students':
+                    connection.invoke("SendToStudents", message);
+                    alertMessage = "Test notification sent to all students!";
+                    break;
+                case 'specific':
+                    connection.invoke("SendToStudent", studentId, message);
+                    const studentName = document.getElementById('specificStudentId').options[document.getElementById('specificStudentId').selectedIndex].text;
+                    alertMessage = `Test notification sent to ${studentName}!`;
+                    break;
+                default:
+                    alertMessage = "Unknown recipient type!";
+                    break;
+            }
+
+            alert(alertMessage);
+        }).catch(err => {
+            console.error("SignalR connection error:", err);
+            alert("Error connecting to notification server. Please try again.");
+        });
+    }
+
+    // Handle form submission
+    document.getElementById('notificationForm').addEventListener('submit', function(e) {
+        const recipientType = document.getElementById('recipientType').value;
+        const studentId = document.getElementById('specificStudentId')?.value;
+
+        // Validate specific student selection
+        if (recipientType === 'specific' && (!studentId || studentId.trim() === '')) {
+            e.preventDefault();
+            alert("Please select a student for specific student notification.");
+            document.getElementById('specificStudentId').focus();
+        }
+
+        // Validate message
+        const message = document.getElementById('message').value;
+        if (!message.trim()) {
+            e.preventDefault();
+            alert("Please enter a notification message.");
+            document.getElementById('message').focus();
+        }
+    });
+</script>

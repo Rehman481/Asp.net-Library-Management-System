@@ -1,0 +1,536 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<!-- Hero Section -->
+<section class="hero-section position-relative overflow-hidden" style="height: 40vh; background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1556075798-4825dfaaf498?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-4 fw-bold mb-3">Privacy Policy</h1>
+                <p class="lead mb-0">Your privacy is important to us. Learn how we protect your data.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="bg-light py-3">
+    <div class="container">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Privacy Policy</li>
+        </ol>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <!-- Table of Contents -->
+            <div class="card shadow-sm border-0 mb-4 sticky-top" style="top: 20px;">
+                <div class="card-header bg-white border-0 py-4">
+                    <h3 class="h5 fw-bold mb-0">Table of Contents</h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="#introduction" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="fas fa-chevron-right text-primary me-2"></i>Introduction
+                        </a>
+                        <a href="#data-collection" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="fas fa-chevron-right text-primary me-2"></i>Data Collection
+                        </a>
+                        <a href="#data-usage" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="fas fa-chevron-right text-primary me-2"></i>Data Usage
+                        </a>
+                        <a href="#data-protection" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="fas fa-chevron-right text-primary me-2"></i>Data Protection
+                        </a>
+                        <a href="#user-rights" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="fas fa-chevron-right text-primary me-2"></i>User Rights
+                        </a>
+                        <a href="#cookies" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="fas fa-chevron-right text-primary me-2"></i>Cookies
+                        </a>
+                        <a href="#third-party" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="fas fa-chevron-right text-primary me-2"></i>Third-Party Services
+                        </a>
+                        <a href="#updates" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="fas fa-chevron-right text-primary me-2"></i>Policy Updates
+                        </a>
+                        <a href="#contact" class="list-group-item list-group-item-action border-0 py-3">
+                            <i class="fas fa-chevron-right text-primary me-2"></i>Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <!-- Last Updated -->
+            <div class="alert alert-info bg-opacity-10 border-info border-opacity-25 mb-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-info-circle fa-lg text-info me-3"></i>
+                    <div>
+                        <strong>Last Updated:</strong> @DateTime.Now.ToString("MMMM dd, yyyy")
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy Policy Content -->
+            <div class="privacy-content">
+                <!-- Introduction -->
+                <section id="introduction" class="mb-5">
+                    <h2 class="h3 fw-bold mb-3">1. Introduction</h2>
+                    <p class="text-muted">
+                        Welcome to Library Management System. We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our digital library platform.
+                    </p>
+                    <p class="text-muted">
+                        Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the platform. We reserve the right to make changes to this Privacy Policy at any time and for any reason.
+                    </p>
+                </section>
+
+                <!-- Data Collection -->
+                <section id="data-collection" class="mb-5">
+                    <h2 class="h3 fw-bold mb-3">2. Data We Collect</h2>
+                    <p class="text-muted mb-3">We collect information that you provide directly to us, including:</p>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 bg-light">
+                                <div class="card-body p-3">
+                                    <h5 class="h6 fw-bold text-primary mb-2"><i class="fas fa-user me-2"></i>Personal Information</h5>
+                                    <ul class="text-muted mb-0">
+                                        <li>Full name</li>
+                                        <li>Email address</li>
+                                        <li>Phone number</li>
+                                        <li>Institutional affiliation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 bg-light">
+                                <div class="card-body p-3">
+                                    <h5 class="h6 fw-bold text-primary mb-2"><i class="fas fa-book me-2"></i>Library Usage Data</h5>
+                                    <ul class="text-muted mb-0">
+                                        <li>Borrowing history</li>
+                                        <li>Search queries</li>
+                                        <li>Book preferences</li>
+                                        <li>Reading patterns</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-light border">
+                        <h5 class="h6 fw-bold mb-2"><i class="fas fa-exclamation-circle text-warning me-2"></i>Automatically Collected Information</h5>
+                        <p class="text-muted mb-0 small">
+                            We automatically collect certain information when you visit, use, or navigate the platform. This information does not reveal your specific identity but may include device and usage information, such as your IP address, browser and device characteristics, operating system, language preferences, referring URLs, device name, country, location, information about how and when you use our platform, and other technical information.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Data Usage -->
+                <section id="data-usage" class="mb-5">
+                    <h2 class="h3 fw-bold mb-3">3. How We Use Your Information</h2>
+                    <p class="text-muted mb-3">We use the information we collect in various ways, including to:</p>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+                                    <i class="fas fa-cogs text-primary fa-lg"></i>
+                                </div>
+                                <h6 class="fw-bold mb-2">Service Provision</h6>
+                                <p class="text-muted small mb-0">Provide, operate, and maintain our library services</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+                                    <i class="fas fa-user-check text-primary fa-lg"></i>
+                                </div>
+                                <h6 class="fw-bold mb-2">User Authentication</h6>
+                                <p class="text-muted small mb-0">Manage user accounts and authentication</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+                                    <i class="fas fa-bell text-primary fa-lg"></i>
+                                </div>
+                                <h6 class="fw-bold mb-2">Communication</h6>
+                                <p class="text-muted small mb-0">Send notifications and updates about library services</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-muted">
+                        We may also use your information for research and analytics purposes to understand how our services are used and to improve our platform. All data used for analytics is anonymized and aggregated to protect individual privacy.
+                    </p>
+                </section>
+
+                <!-- Data Protection -->
+                <section id="data-protection" class="mb-5">
+                    <h2 class="h3 fw-bold mb-3">4. Data Protection & Security</h2>
+                    <div class="card border-0 bg-success bg-opacity-10 mb-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-shield-alt fa-2x text-success me-4"></i>
+                                <div>
+                                    <h4 class="h5 fw-bold mb-2">Our Security Measures</h4>
+                                    <p class="text-muted mb-0">
+                                        We implement appropriate technical and organizational security measures designed to protect the security of any personal information we process. However, please also remember that we cannot guarantee that the internet itself is 100% secure. Although we will do our best to protect your personal information, transmission of personal information to and from our platform is at your own risk.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start p-3 border rounded">
+                                <i class="fas fa-lock text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Encryption</h6>
+                                    <p class="text-muted small mb-0">All data is encrypted in transit using SSL/TLS protocols</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start p-3 border rounded">
+                                <i class="fas fa-server text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Secure Servers</h6>
+                                    <p class="text-muted small mb-0">Data stored on secure servers with regular security audits</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start p-3 border rounded">
+                                <i class="fas fa-user-shield text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Access Control</h6>
+                                    <p class="text-muted small mb-0">Role-based access control with strict permissions</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start p-3 border rounded">
+                                <i class="fas fa-history text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Regular Backups</h6>
+                                    <p class="text-muted small mb-0">Automated backups and disaster recovery procedures</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- User Rights -->
+                <section id="user-rights" class="mb-5">
+                    <h2 class="h3 fw-bold mb-3">5. Your Privacy Rights</h2>
+                    <p class="text-muted mb-4">Depending on your location, you may have the following rights regarding your personal data:</p>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Right</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Access</strong></td>
+                                    <td>Request access to your personal data</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Correction</strong></td>
+                                    <td>Request correction of inaccurate or incomplete data</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Deletion</strong></td>
+                                    <td>Request deletion of your personal data</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Restriction</strong></td>
+                                    <td>Request restriction of processing of your data</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Portability</strong></td>
+                                    <td>Request transfer of your data to another organization</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Objection</strong></td>
+                                    <td>Object to processing of your personal data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-light border mt-4">
+                        <h6 class="fw-bold mb-2"><i class="fas fa-hand-paper text-warning me-2"></i>How to Exercise Your Rights</h6>
+                        <p class="text-muted mb-0 small">
+                            To exercise any of these rights, please contact us using the contact information provided at the end of this policy. We will respond to your request within 30 days. Please note that we may ask you to verify your identity before responding to such requests.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Cookies -->
+                <section id="cookies" class="mb-5">
+                    <h2 class="h3 fw-bold mb-3">6. Cookies and Tracking Technologies</h2>
+                    <p class="text-muted">
+                        We use cookies and similar tracking technologies to track the activity on our platform and store certain information. Cookies are files with small amount of data which may include an anonymous unique identifier.
+                    </p>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="fw-bold mb-2 text-primary">Essential Cookies</h6>
+                                <p class="text-muted small mb-0">Required for basic platform functionality</p>
+                                <span class="badge bg-primary mt-2">Always Active</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="fw-bold mb-2 text-primary">Analytics Cookies</h6>
+                                <p class="text-muted small mb-0">Help us understand how users interact</p>
+                                <span class="badge bg-success mt-2">Optional</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="fw-bold mb-2 text-primary">Preference Cookies</h6>
+                                <p class="text-muted small mb-0">Remember your settings and preferences</p>
+                                <span class="badge bg-success mt-2">Optional</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-muted">
+                        You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our platform. For more information about cookies and how to manage them, visit <a href="https://www.allaboutcookies.org" target="_blank">www.allaboutcookies.org</a>.
+                    </p>
+                </section>
+
+                <!-- Third-Party Services -->
+                <section id="third-party" class="mb-5">
+                    <h2 class="h3 fw-bold mb-3">7. Third-Party Services</h2>
+                    <p class="text-muted mb-3">
+                        We may employ third-party companies and individuals to facilitate our platform, provide the platform on our behalf, perform platform-related services, or assist us in analyzing how our platform is used.
+                    </p>
+
+                    <div class="alert alert-warning bg-opacity-10 border-warning">
+                        <h6 class="fw-bold mb-2"><i class="fas fa-external-link-alt text-warning me-2"></i>Important Note</h6>
+                        <p class="text-muted mb-0 small">
+                            These third parties have access to your personal information only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose. However, we are not responsible for the privacy practices of these third-party services. We encourage you to review their privacy policies.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Policy Updates -->
+                <section id="updates" class="mb-5">
+                    <h2 class="h3 fw-bold mb-3">8. Policy Updates</h2>
+                    <p class="text-muted">
+                        We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date at the top of this Privacy Policy.
+                    </p>
+                    <p class="text-muted">
+                        You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.
+                    </p>
+                </section>
+
+                <!-- Contact -->
+                <section id="contact">
+                    <h2 class="h3 fw-bold mb-3">9. Contact Us</h2>
+                    <p class="text-muted mb-4">
+                        If you have any questions or concerns about this Privacy Policy, please contact us:
+                    </p>
+
+                    <div class="card border-0 bg-light">
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="h6 fw-bold mb-3">Privacy Officer</h5>
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-user text-primary me-2"></i>
+                                        John Smith, Data Protection Officer
+                                    </p>
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-envelope text-primary me-2"></i>
+                                        privacy@library.com
+                                    </p>
+                                    <p class="text-muted">
+                                        <i class="fas fa-phone text-primary me-2"></i>
+                                        +1 (555) 123-4567
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="h6 fw-bold mb-3">Mailing Address</h5>
+                                    <p class="text-muted">
+                                        Library Management System<br>
+                                        Attention: Privacy Department<br>
+                                        123 Library Street<br>
+                                        Knowledge City, KC 12345<br>
+                                        United States
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Privacy Policy Partial View -->
+<partial name="_PrivacyPolicy" />
+
+<style>
+    .hero-section {
+        position: relative;
+        color: white;
+    }
+
+    .breadcrumb {
+        padding: 0.75rem 0;
+    }
+
+    .breadcrumb-item a {
+        color: #2c3e50;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+        .breadcrumb-item a:hover {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .list-group-item {
+        border: none;
+        border-left: 3px solid transparent;
+        padding-left: 1.5rem;
+        transition: all 0.2s ease;
+    }
+
+        .list-group-item:hover,
+        .list-group-item.active {
+            background-color: #f0f7ff;
+            border-left-color: #3498db;
+            color: #2c3e50;
+        }
+
+        .list-group-item.active {
+            font-weight: 600;
+        }
+
+    section {
+        scroll-margin-top: 20px;
+    }
+
+    h2, h3, h4 {
+        color: #2c3e50;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .sticky-top {
+        z-index: 1020;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Smooth scroll for table of contents links
+        document.querySelectorAll('.list-group-item').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    // Update active state
+                    document.querySelectorAll('.list-group-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    this.classList.add('active');
+
+                    // Smooth scroll to section
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Update active link based on scroll position
+        function updateActiveLink() {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPos = window.scrollY + 100;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.list-group-item').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Update active link on scroll
+        window.addEventListener('scroll', updateActiveLink);
+
+        // Initialize
+        updateActiveLink();
+
+        // Print button functionality
+        const printButton = document.getElementById('printButton');
+        if (printButton) {
+            printButton.addEventListener('click', function () {
+                window.print();
+            });
+        }
+
+        // Back to top button
+        const backToTopButton = document.getElementById('backToTop');
+        if (backToTopButton) {
+            window.addEventListener('scroll', function () {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('show');
+                } else {
+                    backToTopButton.classList.remove('show');
+                }
+            });
+
+            backToTopButton.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    });
+</script>

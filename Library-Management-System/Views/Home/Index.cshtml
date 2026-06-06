@@ -1,0 +1,479 @@
+﻿@{
+    ViewData["Title"] = "Digital Library Management System";
+}
+
+<!-- Hero Section with Slideshow Background -->
+<section class="hero-section position-relative overflow-hidden" style="height: 85vh;">
+    <!-- Background Slideshow -->
+    <div class="slideshow-container position-absolute w-100 h-100">
+        <div class="slideshow-inner">
+            <div class="slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+        </div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="container h-100 position-relative z-1">
+        <div class="row h-100 align-items-center">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Welcome to Digital Library</h1>
+                <p class="lead mb-4 fs-5 animate__animated animate__fadeInUp animate__delay-1s">
+                    A comprehensive digital platform for accessing, managing, and exploring thousands of books and resources.
+                    Smart library management for students, faculty, and administrators.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3 mt-5 animate__animated animate__fadeInUp animate__delay-2s">
+                    <a href="/Book/Catalog" class="btn btn-primary btn-lg px-5 py-3 shadow-lg">
+                        <i class="fas fa-book me-2"></i>Browse Collection
+                    </a>
+                    <a href="/Account/Login" class="btn btn-outline-light btn-lg px-5 py-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>Get Started
+                    </a>
+                </div>
+                <div class="mt-5 animate__animated animate__fadeIn animate__delay-3s">
+                    <a href="#features" class="btn btn-link text-white text-decoration-none">
+                        <i class="fas fa-chevron-down fa-2x animate__animated animate__bounce animate__infinite"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slideshow Navigation -->
+    <div class="slideshow-nav position-absolute bottom-3 start-50 translate-middle-x z-2">
+        <div class="d-flex gap-2">
+            <button class="slideshow-prev btn btn-sm btn-outline-light rounded-circle">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="slideshow-dots d-flex gap-2 align-items-center">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <button class="slideshow-next btn btn-sm btn-outline-light rounded-circle">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="p-4">
+                    <h2 class="display-4 text-primary fw-bold">5K+</h2>
+                    <p class="text-muted">Digital Books</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4">
+                    <h2 class="display-4 text-primary fw-bold">2K+</h2>
+                    <p class="text-muted">Active Users</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4">
+                    <h2 class="display-4 text-primary fw-bold">24/7</h2>
+                    <p class="text-muted">Access Available</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4">
+                    <h2 class="display-4 text-primary fw-bold">99%</h2>
+                    <p class="text-muted">Uptime Guarantee</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5 mb-3">Why Choose Our Platform?</h2>
+            <p class="lead text-muted">Modern library management with cutting-edge features</p>
+            <div class="divider mx-auto" style="width: 80px; height: 4px; background: var(--bs-primary);"></div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3 mb-4 mx-auto" style="width: 80px; height: 80px;">
+                            <i class="fas fa-search fa-2x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Advanced Search</h4>
+                        <p class="text-muted">Find books quickly with our powerful search engine, filtering by author, genre, year, and keywords.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3 mb-4 mx-auto" style="width: 80px; height: 80px;">
+                            <i class="fas fa-user-clock fa-2x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Smart Borrowing</h4>
+                        <p class="text-muted">Real-time borrowing system with automated reminders and easy return process for students.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3 mb-4 mx-auto" style="width: 80px; height: 80px;">
+                            <i class="fas fa-chart-line fa-2x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Analytics Dashboard</h4>
+                        <p class="text-muted">Comprehensive insights into library usage, popular books, and borrowing trends for administrators.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3 mb-4 mx-auto" style="width: 80px; height: 80px;">
+                            <i class="fas fa-mobile-alt fa-2x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Mobile Responsive</h4>
+                        <p class="text-muted">Access your library from any device - desktop, tablet, or smartphone with seamless experience.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3 mb-4 mx-auto" style="width: 80px; height: 80px;">
+                            <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Secure Platform</h4>
+                        <p class="text-muted">Enterprise-grade security with role-based access control and data encryption for all users.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3 mb-4 mx-auto" style="width: 80px; height: 80px;">
+                            <i class="fas fa-headset fa-2x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">24/7 Support</h4>
+                        <p class="text-muted">Dedicated support team available round the clock to assist with any queries or issues.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5 mb-3">How It Works</h2>
+            <p class="lead text-muted">Simple steps to get started with digital library</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="text-center p-4">
+                    <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">
+                        1
+                    </div>
+                    <h4 class="fw-bold mb-3">Register & Login</h4>
+                    <p>Create your account or login with existing credentials to access the platform.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="text-center p-4">
+                    <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">
+                        2
+                    </div>
+                    <h4 class="fw-bold mb-3">Browse & Search</h4>
+                    <p>Explore our extensive collection using advanced search filters and categories.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="text-center p-4">
+                    <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">
+                        3
+                    </div>
+                    <h4 class="fw-bold mb-3">Borrow & Manage</h4>
+                    <p>Request books, track borrowing history, and manage returns from your dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold display-6 mb-3">Ready to Transform Your Library Experience?</h2>
+                <p class="lead mb-0">Join thousands of users who have revolutionized their learning and research with our platform.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end text-center mt-lg-0 mt-4">
+                <a href="/Account/Register" class="btn btn-light btn-lg px-5 py-3 fw-bold shadow-lg">
+                    <i class="fas fa-user-plus me-2"></i>Register Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5 mb-3">What Our Users Say</h2>
+            <p class="lead text-muted">Trusted by educational institutions worldwide</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-quote-left fa-2x text-primary opacity-25"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="fw-bold mb-0">Sarah Johnson</h5>
+                                <small class="text-muted">Student, University of Technology</small>
+                            </div>
+                        </div>
+                        <p class="mb-0">"This platform made finding research materials so much easier. The borrowing process is seamless!"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-quote-left fa-2x text-primary opacity-25"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="fw-bold mb-0">Dr. Michael Chen</h5>
+                                <small class="text-muted">Professor & Librarian</small>
+                            </div>
+                        </div>
+                        <p class="mb-0">"The analytics dashboard provides invaluable insights for library resource planning and management."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-quote-left fa-2x text-primary opacity-25"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="fw-bold mb-0">Alex Rodriguez</h5>
+                                <small class="text-muted">IT Administrator</small>
+                            </div>
+                        </div>
+                        <p class="mb-0">"Implementation was smooth, and the support team was extremely helpful throughout the process."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Include Partial Views -->
+<partial name="_ContactUs" />
+<partial name="_PrivacyPolicy" />
+
+<style>
+    /* Hero Section Styles */
+    .hero-section {
+        position: relative;
+        color: white;
+    }
+
+    .slideshow-container {
+        top: 0;
+        left: 0;
+        overflow: hidden;
+    }
+
+    .slideshow-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out;
+        will-change: opacity;
+    }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+    .slideshow-nav {
+        z-index: 10;
+    }
+
+    .slideshow-dots .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .slideshow-dots .dot.active {
+            background-color: white;
+            transform: scale(1.3);
+        }
+
+        .slideshow-dots .dot:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+    /* Other Styles */
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .hover-lift:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+        }
+
+    .icon-wrapper {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover .icon-wrapper {
+        transform: scale(1.1);
+    }
+
+    .step-number {
+        transition: all 0.3s ease;
+    }
+
+    .col-lg-4:hover .step-number {
+        background-color: #0056b3 !important;
+        transform: scale(1.1);
+    }
+</style>
+
+<!-- JavaScript for Slideshow -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Slideshow functionality
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.querySelector('.slideshow-prev');
+        const nextBtn = document.querySelector('.slideshow-next');
+        let currentSlide = 0;
+        let slideInterval;
+
+        // Initialize slideshow
+        function initSlideshow() {
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+            startSlideshow();
+        }
+
+        // Start automatic slideshow
+        function startSlideshow() {
+            slideInterval = setInterval(() => {
+                goToNextSlide();
+            }, 5000); // Change slide every 5 seconds
+        }
+
+        // Go to specific slide
+        function goToSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+
+            currentSlide = (n + slides.length) % slides.length;
+
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        // Next slide
+        function goToNextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        // Previous slide
+        function goToPrevSlide() {
+            goToSlide(currentSlide - 1);
+        }
+
+        // Event listeners
+        prevBtn.addEventListener('click', function () {
+            clearInterval(slideInterval);
+            goToPrevSlide();
+            startSlideshow();
+        });
+
+        nextBtn.addEventListener('click', function () {
+            clearInterval(slideInterval);
+            goToNextSlide();
+            startSlideshow();
+        });
+
+        // Dot navigation
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', function () {
+                clearInterval(slideInterval);
+                goToSlide(index);
+                startSlideshow();
+            });
+        });
+
+        // Pause on hover
+        const slideshowContainer = document.querySelector('.slideshow-container');
+        slideshowContainer.addEventListener('mouseenter', function () {
+            clearInterval(slideInterval);
+        });
+
+        slideshowContainer.addEventListener('mouseleave', function () {
+            startSlideshow();
+        });
+
+        // Initialize
+        initSlideshow();
+    });
+</script>
+
+<!-- Add Animate.css for animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">

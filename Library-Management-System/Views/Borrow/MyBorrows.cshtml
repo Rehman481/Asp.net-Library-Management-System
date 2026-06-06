@@ -1,0 +1,525 @@
+﻿@model List<Library_Management_System.Models.ViewModels.BorrowViewModel>
+@{
+    ViewData["Title"] = "My Borrowed Books";
+
+    // Get counts for each status
+    var pendingCount = Model.Count(m => m.Status == "Pending");
+    var approvedCount = Model.Count(m => m.Status == "Approved" && !m.IsReturned);
+    var returnedCount = Model.Count(m => m.Status == "Returned");
+    var rejectedCount = Model.Count(m => m.Status == "Rejected");
+
+    // Get current filter from query string
+    var currentFilter = Context.Request.Query["status"].ToString();
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 fw-bold text-primary mb-1">
+                <i class="fas fa-book-reader me-2"></i>My Borrowed Books
+            </h1>
+            <p class="text-muted mb-0">Manage your current borrows and view borrowing history</p>
+        </div>
+        <div>
+            <span class="badge bg-primary-subtle text-primary fs-6">
+                <i class="fas fa-history me-1"></i>@Model.Count Total Records
+            </span>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-3 fa-lg"></i>
+            <div class="flex-grow-1">@TempData["Success"]</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle me-3 fa-lg"></i>
+            <div class="flex-grow-1">@TempData["Error"]</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Empty State -->
+    @if (!Model.Any())
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-book-open fa-4x text-muted opacity-25"></i>
+                </div>
+                <h4 class="text-muted mb-3">No Books Borrowed Yet</h4>
+                <p class="text-muted mb-4">You haven't borrowed any books from the library yet.</p>
+                <a href="/Book/Catalog" class="btn btn-primary px-4">
+                    <i class="fas fa-search me-2"></i>Browse Available Books
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Filters -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body py-3">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="fas fa-filter me-2 text-primary"></i>Filter by Status
+                        </h6>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex gap-2 justify-content-md-end flex-wrap">
+                            <a href="/Borrow/MyBorrows"
+                               class="btn btn-sm @(string.IsNullOrEmpty(currentFilter) ? "btn-primary" : "btn-outline-primary")">
+                                All (@Model.Count)
+                            </a>
+                            <a href="/Borrow/MyBorrows?status=Pending"
+                               class="btn btn-sm @(currentFilter == "Pending" ? "btn-warning" : "btn-outline-warning")">
+                                Pending (@pendingCount)
+                            </a>
+                            <a href="/Borrow/MyBorrows?status=Approved"
+                               class="btn btn-sm @(currentFilter == "Approved" ? "btn-success" : "btn-outline-success")">
+                                Active (@approvedCount)
+                            </a>
+                            <a href="/Borrow/MyBorrows?status=Returned"
+                               class="btn btn-sm @(currentFilter == "Returned" ? "btn-info" : "btn-outline-info")">
+                                Returned (@returnedCount)
+                            </a>
+                            <a href="/Borrow/MyBorrows?status=Rejected"
+                               class="btn btn-sm @(currentFilter == "Rejected" ? "btn-danger" : "btn-outline-danger")">
+                                Rejected (@rejectedCount)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Summary Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-primary bg-opacity-10">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-1">Total Records</h6>
+                                <h4 class="fw-bold mb-0">@Model.Count</h4>
+                            </div>
+                            <div class="bg-primary bg-opacity-25 rounded-circle p-2">
+                                <i class="fas fa-list text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-warning bg-opacity-10">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-1">Pending</h6>
+                                <h4 class="fw-bold mb-0">@pendingCount</h4>
+                            </div>
+                            <div class="bg-warning bg-opacity-25 rounded-circle p-2">
+                                <i class="fas fa-clock text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-success bg-opacity-10">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-1">Active</h6>
+                                <h4 class="fw-bold mb-0">@approvedCount</h4>
+                            </div>
+                            <div class="bg-success bg-opacity-25 rounded-circle p-2">
+                                <i class="fas fa-check-circle text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-info bg-opacity-10">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-1">Returned</h6>
+                                <h4 class="fw-bold mb-0">@returnedCount</h4>
+                            </div>
+                            <div class="bg-info bg-opacity-25 rounded-circle p-2">
+                                <i class="fas fa-check-double text-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Books Table -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="fw-bold mb-0 text-primary">
+                            <i class="fas fa-list me-2"></i>Borrowing Records
+                            @if (!string.IsNullOrEmpty(currentFilter))
+                            {
+                                <span class="badge bg-primary ms-2">Filtered: @currentFilter</span>
+                            }
+                        </h5>
+                        <p class="text-muted small mb-0">Your complete borrowing history</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <div class="input-group input-group-sm" style="width: 200px;">
+                            <span class="input-group-text bg-transparent"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" placeholder="Search books..." id="searchInput">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="borrowsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">
+                                    <span class="d-flex align-items-center">
+                                        <i class="fas fa-book me-2 text-muted"></i>BOOK DETAILS
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="d-flex align-items-center">
+                                        <i class="fas fa-calendar-plus me-2 text-muted"></i>REQUEST DATE
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="d-flex align-items-center">
+                                        <i class="fas fa-calendar-check me-2 text-muted"></i>DUE DATE
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="d-flex align-items-center">
+                                        <i class="fas fa-tag me-2 text-muted"></i>STATUS
+                                    </span>
+                                </th>
+                                <th class="pe-4">
+                                    <span class="d-flex align-items-center">
+                                        <i class="fas fa-cogs me-2 text-muted"></i>ACTIONS
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                // Filter the model based on currentFilter
+                                var filteredModel = Model;
+                                if (!string.IsNullOrEmpty(currentFilter))
+                                {
+                                    filteredModel = Model.Where(m => m.Status == currentFilter).ToList();
+                                }
+                            }
+
+                            @if (!filteredModel.Any())
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center py-5">
+                                        <div class="mb-3">
+                                            <i class="fas fa-search fa-3x text-muted opacity-25"></i>
+                                        </div>
+                                        <h5 class="text-muted">No records found</h5>
+                                        <p class="text-muted mb-0">No books found with status "@currentFilter"</p>
+                                        <a href="/Borrow/MyBorrows" class="btn btn-primary mt-3">
+                                            <i class="fas fa-times me-2"></i>Clear Filter
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var item in filteredModel)
+                                {
+                                    var isOverdue = item.DueDate.HasValue && item.DueDate < DateTime.Now && item.Status == "Approved" && !item.IsReturned;
+
+                                    <tr class="border-top @(isOverdue ? "table-danger-light" : "")"
+                                        data-book-title="@item.BookTitle?.ToLower()"
+                                        data-author="@item.BookAuthor?.ToLower()"
+                                        data-status="@item.Status?.ToLower()">
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-start">
+                                                <div class="flex-shrink-0">
+                                                    <div class="bg-primary bg-opacity-10 text-primary rounded-2 p-2 me-3">
+                                                        <i class="fas fa-book fa-lg"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="fw-bold mb-1">@item.BookTitle</h6>
+                                                    <p class="text-muted small mb-0">
+                                                        <i class="fas fa-user-pen me-1"></i>@item.BookAuthor
+                                                    </p>
+                                                    @if (item.BorrowId > 0)
+                                                    {
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-hashtag me-1"></i>Borrow ID: @item.BorrowId
+                                                        </small>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-nowrap">
+                                                <span class="fw-medium">@item.RequestDate?.ToString("MMM dd, yyyy")</span>
+                                                <div class="text-muted small">@item.RequestDate?.ToString("hh:mm tt")</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (item.DueDate.HasValue)
+                                            {
+                                                <div class="text-nowrap">
+                                                    <span class="fw-medium @(isOverdue ? "text-danger" : "")">@item.DueDate.Value.ToString("MMM dd, yyyy")</span>
+                                                    <div class="text-muted small">
+                                                        @if (isOverdue)
+                                                        {
+                                                            <span class="text-danger">
+                                                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                                                Overdue by @((DateTime.Now - item.DueDate.Value).Days) days
+                                                            </span>
+                                                        }
+                                                        else if (item.DueDate.HasValue)
+                                                        {
+                                                            var daysLeft = (item.DueDate.Value - DateTime.Now).Days;
+                                                            if (daysLeft > 0)
+                                                            {
+                                                                <span class="text-success">
+                                                                    <i class="fas fa-calendar-check me-1"></i>@daysLeft days left
+                                                                </span>
+                                                            }
+                                                            else if (daysLeft == 0)
+                                                            {
+                                                                <span class="text-warning">
+                                                                    <i class="fas fa-exclamation-circle me-1"></i>Due today
+                                                                </span>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted fst-italic">Not assigned</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Status == "Pending")
+                                            {
+                                                <span class="badge bg-warning text-dark px-3 py-2">
+                                                    <i class="fas fa-clock me-1"></i>Pending Review
+                                                </span>
+                                            }
+                                            else if (item.Status == "Approved")
+                                            {
+                                                <span class="badge bg-success text-white px-3 py-2">
+                                                    <i class="fas fa-check-circle me-1"></i>Approved
+                                                </span>
+                                            }
+                                            else if (item.Status == "Rejected")
+                                            {
+                                                <span class="badge bg-danger text-white px-3 py-2">
+                                                    <i class="fas fa-times-circle me-1"></i>Rejected
+                                                </span>
+                                            }
+                                            else if (item.Status == "Returned")
+                                            {
+                                                <span class="badge bg-info text-white px-3 py-2">
+                                                    <i class="fas fa-check-double me-1"></i>Returned
+                                                </span>
+                                            }
+                                        </td>
+                                        <td class="pe-4">
+                                            @if (item.Status == "Approved" && !item.IsReturned)
+                                            {
+                                                <div class="d-flex gap-2">
+                                                    <form method="post" asp-action="Return" class="d-inline">
+                                                        <input type="hidden" name="id" value="@item.BorrowId" />
+                                                        <button type="submit" class="btn btn-success btn-sm px-3 py-2"
+                                                                onclick="return confirm('Are you sure you want to return this book?')">
+                                                            <i class="fas fa-check me-1"></i>Return Book
+                                                        </button>
+                                                    </form>
+                                                    @if (isOverdue)
+                                                    {
+                                                        <span class="badge bg-danger text-white px-3 py-2">
+                                                            <i class="fas fa-exclamation-triangle me-1"></i>Overdue
+                                                        </span>
+                                                    }
+                                                </div>
+                                            }
+                                            else if (item.Status == "Pending")
+                                            {
+                                                <span class="text-muted small">Awaiting librarian approval</span>
+                                            }
+                                            else if (item.Status == "Returned")
+                                            {
+                                                <span class="text-success small">
+                                                    <i class="fas fa-check-circle me-1"></i>Successfully returned
+                                                </span>
+                                            }
+                                            else if (item.Status == "Rejected")
+                                            {
+                                                <span class="text-danger small">
+                                                    <i class="fas fa-times-circle me-1"></i>Request was rejected
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-0 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted small">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Showing @filteredModel.Count of @Model.Count records
+                            @if (!string.IsNullOrEmpty(currentFilter))
+                            {
+                                <span class="badge bg-primary ms-2">Filter: @currentFilter</span>
+                            }
+                        </span>
+                    </div>
+                    <div>
+                        <span class="text-muted small me-3">
+                            <i class="fas fa-clock me-1"></i>Last updated: @DateTime.Now.ToString("hh:mm tt")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Action Buttons -->
+    <div class="mt-4 pt-3 border-top">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <a href="/StudentDashboard" class="btn btn-outline-secondary px-4">
+                    <i class="fas fa-tachometer-alt me-2"></i>Back to Dashboard
+                </a>
+            </div>
+            <div class="d-flex gap-3">
+                <a href="/Book/Catalog" class="btn btn-primary px-4">
+                    <i class="fas fa-search me-2"></i>Browse More Books
+                </a>
+                <button class="btn btn-outline-primary px-4" onclick="window.print()">
+                    <i class="fas fa-print me-2"></i>Print List
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-danger-light {
+        background-color: rgba(220, 53, 69, 0.05) !important;
+    }
+
+    .card {
+        border-radius: 12px !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+        }
+
+    .btn {
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+    .badge {
+        border-radius: 20px;
+    }
+
+    .table > :not(:first-child) {
+        border-top: 0;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(function() {
+            // Search functionality
+            $('#searchInput').on('keyup', function() {
+                var searchText = $(this).val().toLowerCase();
+
+                $('#borrowsTable tbody tr').each(function() {
+                    var bookTitle = $(this).data('book-title') || '';
+                    var author = $(this).data('author') || '';
+
+                    if (bookTitle.includes(searchText) || author.includes(searchText)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+
+            // Add animation to table rows
+            $('#borrowsTable tbody tr').each(function(index) {
+                $(this).css('animation-delay', (index * 0.05) + 's');
+                $(this).addClass('animate__animated animate__fadeIn');
+            });
+
+            // Status filter highlighting
+            var currentFilter = '@currentFilter'.toLowerCase();
+            if (currentFilter) {
+                $('#borrowsTable tbody tr').each(function() {
+                    var status = $(this).data('status') || '';
+                    if (status !== currentFilter) {
+                        $(this).hide();
+                    }
+                });
+            }
+
+            // Tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+
+    <!-- Add Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+}

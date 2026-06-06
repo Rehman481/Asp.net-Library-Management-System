@@ -1,0 +1,325 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<!-- Hero Section -->
+<section class="hero-section position-relative overflow-hidden" style="height: 40vh; background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-4 fw-bold mb-3">Contact Us</h1>
+                <p class="lead mb-0">Get in touch with our team. We're here to help!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="bg-light py-3">
+    <div class="container">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+        </ol>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Contact Form -->
+            <div class="card shadow-sm border-0 mb-5">
+                <div class="card-header bg-white border-0 py-4">
+                    <h2 class="h3 fw-bold mb-0">Send us a message</h2>
+                    <p class="text-muted mb-0">We'll get back to you as soon as possible</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form id="contactForm" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label fw-semibold">Full Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                                <div class="invalid-feedback">Please enter your name.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label fw-semibold">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="subject" class="form-label fw-semibold">Subject *</label>
+                            <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter subject" required>
+                            <div class="invalid-feedback">Please enter a subject.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="message" class="form-label fw-semibold">Message *</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
+                            <div class="invalid-feedback">Please enter your message.</div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="mb-5">
+                <h3 class="h4 fw-bold mb-4">Frequently Asked Questions</h3>
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item border rounded mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                What are your support hours?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Our support team is available 24/7. For urgent matters, please call our support line. Email responses are typically within 2-4 hours during business days.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border rounded mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How can I reset my password?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Click on "Forgot Password" on the login page. Enter your email address, and we'll send you a password reset link. Make sure to check your spam folder if you don't see the email.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border rounded mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Can I access the library from multiple devices?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! Our platform is accessible from any device with an internet connection. You can seamlessly switch between desktop, tablet, and mobile devices.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Contact Information -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-primary text-white py-4">
+                    <h3 class="h5 mb-0"><i class="fas fa-info-circle me-2"></i>Contact Information</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                            <i class="fas fa-map-marker-alt text-primary fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="h6 fw-bold mb-1">Address</h5>
+                            <p class="text-muted mb-0">
+                                123 Library Street<br>
+                                Knowledge City, KC 12345<br>
+                                United States
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                            <i class="fas fa-phone text-primary fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="h6 fw-bold mb-1">Phone Numbers</h5>
+                            <p class="text-muted mb-0">
+                                <strong>Support:</strong> +1 (555) 123-4567<br>
+                                <strong>Admin:</strong> +1 (555) 987-6543<br>
+                                <small class="text-muted">Mon-Fri, 9AM-6PM EST</small>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                            <i class="fas fa-envelope text-primary fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="h6 fw-bold mb-1">Email Addresses</h5>
+                            <p class="text-muted mb-0">
+                                <strong>Support:</strong> support@library.com<br>
+                                <strong>Admin:</strong> admin@library.com<br>
+                                <strong>Technical:</strong> tech@library.com
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start">
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                            <i class="fas fa-clock text-primary fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="h6 fw-bold mb-1">Business Hours</h5>
+                            <p class="text-muted mb-0">
+                                <strong>Monday - Friday:</strong> 9:00 AM - 6:00 PM<br>
+                                <strong>Saturday:</strong> 10:00 AM - 4:00 PM<br>
+                                <strong>Sunday:</strong> Closed
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Contact -->
+            <div class="card shadow-sm border-0 border-start border-3 border-warning">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-warning bg-opacity-10 rounded-circle p-2 me-3">
+                            <i class="fas fa-exclamation-triangle text-warning"></i>
+                        </div>
+                        <div>
+                            <h5 class="h6 fw-bold mb-0">Urgent Support</h5>
+                            <p class="text-muted small mb-0">For system emergencies only</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning bg-opacity-10 border-warning border-opacity-25">
+                        <p class="mb-2"><strong>Emergency Hotline:</strong></p>
+                        <h4 class="text-warning fw-bold mb-0">+1 (555) 911-9111</h4>
+                        <small class="text-muted">Available 24/7 for critical system issues</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Contact Us Partial View -->
+<partial name="_ContactUs" />
+
+<style>
+    .hero-section {
+        position: relative;
+        color: white;
+    }
+
+    .breadcrumb {
+        padding: 0.75rem 0;
+    }
+
+    .breadcrumb-item a {
+        color: #2c3e50;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+        .breadcrumb-item a:hover {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .accordion-button {
+        font-weight: 500;
+        background-color: #f8f9fa;
+    }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #f0f7ff;
+            color: #2c3e50;
+        }
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        border-color: #3498db;
+        padding: 0.75rem 2rem;
+        font-weight: 500;
+    }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Form validation
+        const contactForm = document.getElementById('contactForm');
+
+        contactForm.addEventListener('submit', function (event) {
+            if (!contactForm.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            contactForm.classList.add('was-validated');
+
+            // If form is valid, show success message
+            if (contactForm.checkValidity()) {
+                event.preventDefault();
+
+                // Show success message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show mt-4';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>Thank you!</strong> Your message has been sent successfully. We'll get back to you soon.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+
+                contactForm.parentNode.insertBefore(alertDiv, contactForm.nextSibling);
+
+                // Reset form
+                contactForm.reset();
+                contactForm.classList.remove('was-validated');
+
+                // Scroll to success message
+                setTimeout(() => {
+                    alertDiv.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        }, false);
+
+        // Add floating labels effect
+        const formControls = contactForm.querySelectorAll('.form-control');
+        formControls.forEach(control => {
+            control.addEventListener('focus', function () {
+                this.parentElement.classList.add('focused');
+            });
+
+            control.addEventListener('blur', function () {
+                if (this.value === '') {
+                    this.parentElement.classList.remove('focused');
+                }
+            });
+
+            // Check on load
+            if (control.value !== '') {
+                control.parentElement.classList.add('focused');
+            }
+        });
+    });
+</script>

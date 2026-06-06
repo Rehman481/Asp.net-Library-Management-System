@@ -1,0 +1,108 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<!-- Privacy Policy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="privacyModalLabel">
+                    <i class="fas fa-shield-alt me-2"></i>Privacy Policy
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="text-center mb-4">
+                        <h4 class="fw-bold text-primary">Digital Library Privacy Policy</h4>
+                        <p class="text-muted">Last Updated: @DateTime.Now.ToString("MMMM dd, yyyy")</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold border-bottom pb-2 mb-3">1. Information We Collect</h5>
+                        <p>We collect information to provide better services to all our users. The types of information we collect include:</p>
+                        <ul>
+                            <li><strong>Personal Information:</strong> Name, email address, contact details when you register.</li>
+                            <li><strong>Usage Data:</strong> Information about how you use our platform, including book searches, borrow history, and preferences.</li>
+                            <li><strong>Device Information:</strong> IP address, browser type, operating system, and device identifiers.</li>
+                            <li><strong>Cookies:</strong> We use cookies to enhance your browsing experience and analyze site traffic.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold border-bottom pb-2 mb-3">2. How We Use Your Information</h5>
+                        <p>We use the collected information for various purposes:</p>
+                        <ul>
+                            <li>To provide and maintain our library services</li>
+                            <li>To notify you about changes to our services</li>
+                            <li>To allow you to participate in interactive features</li>
+                            <li>To provide customer support</li>
+                            <li>To gather analysis or valuable information to improve our services</li>
+                            <li>To monitor the usage of our platform</li>
+                            <li>To detect, prevent and address technical issues</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold border-bottom pb-2 mb-3">3. Data Security</h5>
+                        <p>We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold border-bottom pb-2 mb-3">4. Your Data Protection Rights</h5>
+                        <p>You have the right to:</p>
+                        <ul>
+                            <li><strong>Access:</strong> Request copies of your personal data</li>
+                            <li><strong>Rectification:</strong> Request correction of inaccurate information</li>
+                            <li><strong>Erasure:</strong> Request deletion of your personal data</li>
+                            <li><strong>Restriction:</strong> Request restriction of processing your personal data</li>
+                            <li><strong>Objection:</strong> Object to our processing of your personal data</li>
+                            <li><strong>Portability:</strong> Request transfer of your data to another organization</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold border-bottom pb-2 mb-3">5. Third-Party Services</h5>
+                        <p>We may employ third-party companies and individuals to facilitate our services, provide services on our behalf, or assist us in analyzing how our services are used. These third parties have access to your personal information only to perform these tasks and are obligated not to disclose or use it for any other purpose.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold border-bottom pb-2 mb-3">6. Changes to This Policy</h5>
+                        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold border-bottom pb-2 mb-3">7. Contact Us</h5>
+                        <p>If you have any questions about this Privacy Policy, please contact us:</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-envelope me-2 text-primary"></i>privacy@digitallibrary.com</li>
+                            <li><i class="fas fa-phone me-2 text-primary"></i>+1 (555) 123-4567</li>
+                            <li><i class="fas fa-map-marker-alt me-2 text-primary"></i>123 Library Street, Knowledge City</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="window.print()">
+                    <i class="fas fa-print me-2"></i>Print Policy
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Policy Link in Footer (Add this to your _Layout.cshtml footer) -->
+<!--
+<div class="container">
+    <div class="text-center">
+        <small class="text-muted">
+            &copy; @DateTime.Now.Year Digital Library Management System. All rights reserved.
+            | <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal" class="text-decoration-none">Privacy Policy</a>
+            | <a href="#contact" class="text-decoration-none">Contact Us</a>
+        </small>
+    </div>
+</div>
+-->

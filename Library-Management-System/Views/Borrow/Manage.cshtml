@@ -1,0 +1,298 @@
+﻿@model List<Library_Management_System.Models.ViewModels.BorrowViewModel>
+@{
+    ViewData["Title"] = "Borrow Request Management";
+}
+
+<div class="container-fluid py-4">
+    <!-- Header Card -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="fas fa-clipboard-list text-primary fa-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="h3 mb-1 fw-semibold">Borrow Request Management</h1>
+                            <p class="text-muted mb-0">Review and manage book borrowing requests from students</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-md-end">
+                        <div class="text-center me-4">
+                            <span class="d-block h4 mb-1 fw-bold">@Model.Count</span>
+                            <span class="text-muted small">Total Requests</span>
+                        </div>
+                        <div class="vr me-4 d-none d-md-block"></div>
+                        <div class="text-center">
+                            <span class="d-block h4 mb-1 fw-bold text-warning">
+                                @Model.Count(x => x.Status == "Pending")
+                            </span>
+                            <span class="text-muted small">Pending</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Alerts -->
+    <div class="mb-4">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+                <i class="fas fa-check-circle me-3 fa-lg"></i>
+                <div class="flex-grow-1">@TempData["Success"]</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+                <i class="fas fa-exclamation-circle me-3 fa-lg"></i>
+                <div class="flex-grow-1">@TempData["Error"]</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
+    <!-- Status Legend -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body py-2">
+            <div class="d-flex flex-wrap gap-3 align-items-center">
+                <span class="text-muted small fw-medium">Status Legend:</span>
+                <span class="badge bg-warning text-dark px-3 py-1">
+                    <i class="fas fa-clock me-1"></i> Pending
+                </span>
+                <span class="badge bg-success text-white px-3 py-1">
+                    <i class="fas fa-check me-1"></i> Approved
+                </span>
+                <span class="badge bg-danger text-white px-3 py-1">
+                    <i class="fas fa-times me-1"></i> Rejected
+                </span>
+                <span class="badge bg-info text-white px-3 py-1">
+                    <i class="fas fa-undo me-1"></i> Returned
+                </span>
+                <span class="badge bg-secondary text-white px-3 py-1">
+                    <i class="fas fa-question me-1"></i> Other
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            @if (!Model.Any())
+            {
+                <!-- Empty State -->
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-inbox fa-4x text-muted opacity-25"></i>
+                    </div>
+                    <h4 class="text-muted mb-3">No borrow requests found</h4>
+                    <p class="text-muted mb-4">All borrowing requests have been processed or no new requests are available.</p>
+                    <button class="btn btn-outline-primary" onclick="location.reload()">
+                        <i class="fas fa-redo me-2"></i>Refresh
+                    </button>
+                </div>
+            }
+            else
+            {
+                <!-- Table Section -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4" scope="col">#</th>
+                                <th scope="col">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-user-graduate me-2 text-muted"></i>
+                                        Student
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-book me-2 text-muted"></i>
+                                        Book ID
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-calendar-alt me-2 text-muted"></i>
+                                        Request Date
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-comment me-2 text-muted"></i>
+                                        Purpose
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-tag me-2 text-muted"></i>
+                                        Status
+                                    </div>
+                                </th>
+                                <th class="pe-4 text-end" scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="border-top">
+                                    <td class="ps-4 fw-semibold text-muted">@item.BorrowId</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                                                <i class="fas fa-user text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <span class="d-block fw-medium">@item.StudentName</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-dark bg-opacity-10 text-dark fs-6 fw-normal">#@item.BookId</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-medium">@item.RequestDate?.ToString("MMM dd, yyyy")</span>
+                                            <small class="text-muted">@item.RequestDate?.ToString("hh:mm tt")</small>
+                                        </div>
+                                    </td>
+                                    <td style="max-width: 250px;">
+                                        <div class="text-truncate" data-bs-toggle="tooltip" data-bs-placement="top" title="@item.Purpose">
+                                            @item.Purpose
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @switch (item.Status?.ToLower())
+                                        {
+                                            case "pending":
+                                                <span class="badge bg-warning text-dark px-3 py-2">
+                                                    <i class="fas fa-clock me-1"></i> Pending
+                                                </span>
+                                                break;
+                                            case "approved":
+                                                <span class="badge bg-success text-white px-3 py-2">
+                                                    <i class="fas fa-check me-1"></i> Approved
+                                                </span>
+                                                break;
+                                            case "rejected":
+                                                <span class="badge bg-danger text-white px-3 py-2">
+                                                    <i class="fas fa-times me-1"></i> Rejected
+                                                </span>
+                                                break;
+                                            case "returned":
+                                                <span class="badge bg-info text-white px-3 py-2">
+                                                    <i class="fas fa-undo me-1"></i> Returned
+                                                </span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary text-white px-3 py-2">
+                                                    <i class="fas fa-question me-1"></i> @item.Status
+                                                </span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td class="pe-4 text-end">
+                                        @if (item.Status?.ToLower() == "pending")
+                                        {
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <form method="post" asp-action="Approve" class="d-inline">
+                                                    <input type="hidden" name="id" value="@item.BorrowId" />
+                                                    <button type="submit" class="btn btn-success btn-sm px-3 py-2">
+                                                        <i class="fas fa-check me-1"></i> Approve
+                                                    </button>
+                                                </form>
+                                                <form method="post" asp-action="Reject" class="d-inline">
+                                                    <input type="hidden" name="id" value="@item.BorrowId" />
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm px-3 py-2">
+                                                        <i class="fas fa-times me-1"></i> Reject
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        }
+                                        else if (item.Status?.ToLower() == "returned")
+                                        {
+                                            <span class="text-muted small">
+                                                <i class="fas fa-check-circle text-success me-1"></i>Book Returned
+                                            </span>
+                                        }
+                                        else if (item.Status?.ToLower() == "approved")
+                                        {
+                                            <span class="text-muted small">
+                                                <i class="fas fa-book me-1"></i>Book Issued
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small">
+                                                <i class="fas fa-ban me-1"></i>No Actions
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table Footer -->
+                <div class="card-footer bg-transparent border-top py-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <div class="spinner-border spinner-border-sm text-primary d-none" role="status" id="loadingSpinner">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="text-muted small">
+                                    Showing <span class="fw-semibold">@Model.Count</span> requests
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-md-end gap-2">
+                                <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">
+                                    <i class="fas fa-print me-1"></i> Print
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm" onclick="location.reload()">
+                                    <i class="fas fa-sync-alt me-1"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Tooltip Initialization -->
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Add loading spinner to form submissions
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function () {
+                    const spinner = document.getElementById('loadingSpinner');
+                    if (spinner) {
+                        spinner.classList.remove('d-none');
+                    }
+                });
+            });
+        });
+    </script>
+}

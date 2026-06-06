@@ -1,0 +1,746 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center py-4">
+        <div>
+            <h1 class="h3 fw-bold text-primary mb-1">
+                <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+            </h1>
+            <p class="text-muted mb-0">Welcome back, <span class="fw-semibold text-primary">@ViewBag.AdminName</span> • Library Management Console</p>
+        </div>
+        <div class="d-flex align-items-center">
+            <span class="badge bg-primary-subtle text-primary fs-6 me-3">
+                <i class="fas fa-user-shield me-1"></i>Administrator
+            </span>
+            <div class="vr me-3"></div>
+            <span class="text-muted small">
+                <i class="fas fa-calendar-alt me-1"></i>@DateTime.Now.ToString("dddd, MMMM dd, yyyy")
+            </span>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center shadow-sm mb-4" role="alert">
+            <i class="fas fa-check-circle me-3 fa-lg"></i>
+            <div class="flex-grow-1">@TempData["Success"]</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm mb-4" role="alert">
+            <i class="fas fa-exclamation-circle me-3 fa-lg"></i>
+            <div class="flex-grow-1">@TempData["Error"]</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Stats Cards Section -->
+    <div class="row g-4 mb-4">
+        <!-- Pending Requests -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm bg-gradient-warning text-dark h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-dark mb-2">PENDING REQUESTS</p>
+                            <h2 class="display-6 fw-bold mb-0">@ViewBag.PendingRequests</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-dark text-warning fs-7">
+                                    <i class="fas fa-clock me-1"></i>Awaiting Review
+                                </span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper bg-dark bg-opacity-10 rounded-circle p-3">
+                            <i class="fas fa-clock fa-2x text-dark"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-warning bg-opacity-25 border-0 py-3">
+                    <a href="/Borrow/Manage" class="text-dark text-decoration-none small">
+                        Manage Requests <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Borrows -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm bg-gradient-success text-white h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-white-50 mb-2">ACTIVE BORROWS</p>
+                            <h2 class="display-6 fw-bold mb-0">@ViewBag.ApprovedBorrows</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-white text-success fs-7">
+                                    <i class="fas fa-book-open me-1"></i>Currently Borrowed
+                                </span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+                            <i class="fas fa-book-open fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-success bg-opacity-25 border-0 py-3">
+                    <a href="/AdminDashboard/ActiveBorrows" class="text-white text-decoration-none small">
+                        View Active <i class="fas fa-list ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Returned Books -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm bg-gradient-info text-white h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-white-50 mb-2">RETURNED BOOKS</p>
+                            <h2 class="display-6 fw-bold mb-0">@ViewBag.ReturnedBooks</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-white text-info fs-7">
+                                    <i class="fas fa-history me-1"></i>Completed
+                                </span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-info bg-opacity-25 border-0 py-3">
+                    <div class="text-white small">
+                        <i class="fas fa-chart-bar me-1"></i>Total: @ViewBag.TotalBorrows
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overdue Books -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm bg-gradient-danger text-white h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-white-50 mb-2">OVERDUE BOOKS</p>
+                            @{
+                                int overdueCount = 0;
+                                if (ViewBag.RecentBorrows != null)
+                                {
+                                    var recentBorrows = ViewBag.RecentBorrows as List<Library_Management_System.Models.Borrow>;
+                                    if (recentBorrows != null)
+                                    {
+                                        overdueCount = recentBorrows.Count(b => b.DueDate < DateTime.Now && !b.IsReturned);
+                                    }
+                                }
+                            }
+                            <h2 class="display-6 fw-bold mb-0">@overdueCount</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-white text-danger fs-7">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>Requires Action
+                                </span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-danger bg-opacity-25 border-0 py-3">
+                    <a href="/AdminDashboard/OverdueBooks" class="text-white text-decoration-none small">
+                        Check Now <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Row - Inventory Stats -->
+    <div class="row g-4 mb-4">
+        <!-- Total Books -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm bg-gradient-dark text-white h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-white-50 mb-2">TOTAL BOOKS</p>
+                            <h2 class="display-6 fw-bold mb-0">@ViewBag.TotalBooks</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-white text-dark fs-7">
+                                    <i class="fas fa-database me-1"></i>Inventory
+                                </span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+                            <i class="fas fa-book fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-dark bg-opacity-25 border-0 py-3">
+                    <a href="/Book/Index" class="text-white text-decoration-none small">
+                        View Catalog <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Books -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm bg-gradient-success text-white h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-white-50 mb-2">AVAILABLE</p>
+                            <h2 class="display-6 fw-bold mb-0">@ViewBag.AvailableBooks</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-white text-success fs-7">
+                                    <i class="fas fa-check me-1"></i>Ready to Borrow
+                                </span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+                            <i class="fas fa-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm bg-gradient-warning text-dark h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-dark mb-2">LOW STOCK</p>
+                            <h2 class="display-6 fw-bold mb-0">@ViewBag.LowStockBooks</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-dark text-warning fs-7">
+                                    <i class="fas fa-exclamation me-1"></i>Needs Restocking
+                                </span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper bg-dark bg-opacity-10 rounded-circle p-3">
+                            <i class="fas fa-exclamation fa-2x text-dark"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Out of Stock -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm bg-gradient-danger text-white h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-white-50 mb-2">OUT OF STOCK</p>
+                            <h2 class="display-6 fw-bold mb-0">@ViewBag.OutOfStockBooks</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-white text-danger fs-7">
+                                    <i class="fas fa-times me-1"></i>Restock Required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+                            <i class="fas fa-times fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third Row - User Stats -->
+    <div class="row g-4 mb-4">
+        <!-- Registered Users -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm bg-gradient-purple text-white h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-white-50 mb-2">REGISTERED USERS</p>
+                            <h2 class="display-6 fw-bold mb-0">@ViewBag.RegisteredStudents</h2>
+                            <div class="mt-3">
+                                <span class="badge bg-white text-purple fs-7">
+                                    <i class="fas fa-users me-1"></i>Active Accounts
+                                </span>
+                            </div>
+                        </div>
+                        <div class="icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="row g-4">
+        <!-- Recent Pending Requests -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="fw-bold mb-0 text-primary">
+                                <i class="fas fa-clock me-2"></i>Recent Pending Requests
+                            </h5>
+                            <p class="text-muted small mb-0">Awaiting your approval</p>
+                        </div>
+                        <div>
+                            <span class="badge bg-primary-subtle text-primary">
+                                <i class="fas fa-sync-alt me-1"></i>Real-time Updates
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.RecentPending != null && ViewBag.RecentPending.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">
+                                            <span class="d-flex align-items-center">
+                                                <i class="fas fa-user me-2 text-muted"></i>STUDENT
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="d-flex align-items-center">
+                                                <i class="fas fa-book me-2 text-muted"></i>BOOK ID
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="d-flex align-items-center">
+                                                <i class="fas fa-calendar me-2 text-muted"></i>REQUEST DATE
+                                            </span>
+                                        </th>
+                                        <th class="pe-4">
+                                            <span class="d-flex align-items-center">
+                                                <i class="fas fa-cogs me-2 text-muted"></i>ACTIONS
+                                            </span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var borrow in ViewBag.RecentPending)
+                                    {
+                                        <tr class="border-top">
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="bg-primary bg-opacity-10 text-primary rounded-2 p-2 me-3">
+                                                        <i class="fas fa-user-graduate"></i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="fw-semibold">@borrow.StudentName</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="bg-secondary bg-opacity-10 text-secondary rounded-2 px-3 py-1">
+                                                    <span class="fw-medium">#@borrow.BookId</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="text-nowrap">
+                                                    <span class="fw-medium">@borrow.RequestDate.ToString("MMM dd, yyyy")</span>
+                                                    <div class="text-muted small">@borrow.RequestDate.ToString("hh:mm tt")</div>
+                                                </div>
+                                            </td>
+                                            <td class="pe-4">
+                                                <div class="d-flex gap-2">
+                                                    <form method="post" asp-action="QuickApprove" class="d-inline">
+                                                        <input type="hidden" name="id" value="@borrow.Id" />
+                                                        <button type="submit" class="btn btn-success btn-sm px-3 py-2"
+                                                                onclick="return confirm('Approve this borrow request?')">
+                                                            <i class="fas fa-check me-1"></i>Approve
+                                                        </button>
+                                                    </form>
+                                                    <form method="post" asp-action="QuickReject" class="d-inline">
+                                                        <input type="hidden" name="id" value="@borrow.Id" />
+                                                        <button type="submit" class="btn btn-danger btn-sm px-3 py-2"
+                                                                onclick="return confirm('Reject this borrow request?')">
+                                                            <i class="fas fa-times me-1"></i>Reject
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 pt-3 border-top">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted small">
+                                        <i class="fas fa-info-circle me-1"></i>Showing @ViewBag.RecentPending.Count pending requests
+                                    </span>
+                                </div>
+                                <a href="/Borrow/Manage" class="btn btn-outline-primary px-4">
+                                    <i class="fas fa-list me-2"></i>Manage All Requests
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="fas fa-check-circle fa-4x text-success opacity-25"></i>
+                            </div>
+                            <h5 class="text-muted mb-3">No Pending Requests</h5>
+                            <p class="text-muted mb-4">All borrow requests have been processed.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0 text-primary">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <a href="/Book/Create" class="btn btn-outline-primary w-100 h-100 p-3 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                                <span class="fw-medium">Add Book</span>
+                                <small class="text-muted mt-1">New Entry</small>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="/Book/Index" class="btn btn-outline-success w-100 h-100 p-3 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fas fa-book fa-2x mb-2"></i>
+                                <span class="fw-medium">Manage Books</span>
+                                <small class="text-muted mt-1">Catalog</small>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="/AdminDashboard/Notifications" class="btn btn-outline-warning w-100 h-100 p-3 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fas fa-bell fa-2x mb-2"></i>
+                                <span class="fw-medium">Notifications</span>
+                                <small class="text-muted mt-1">Send Alerts</small>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="/AdminDashboard/OverdueBooks" class="btn btn-outline-danger w-100 h-100 p-3 d-flex flex-column align-items-center justify-content-center">
+                                <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                                <span class="fw-medium">Overdue</span>
+                                <small class="text-muted mt-1">Check Now</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="fw-bold mb-0 text-primary">
+                                <i class="fas fa-history me-2"></i>Recent Activity
+                            </h5>
+                            <p class="text-muted small mb-0">Latest library transactions</p>
+                        </div>
+                        <div>
+                            <span class="badge bg-primary-subtle text-primary">
+                                <i class="fas fa-rss me-1"></i>Live Feed
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.RecentBorrows != null)
+                    {
+                        <div class="activity-timeline">
+                            @foreach (var borrow in ViewBag.RecentBorrows)
+                            {
+                                <div class="activity-item d-flex">
+                                    <div class="activity-icon me-3">
+                                        @if (borrow.Status == "Approved")
+                                        {
+                                            <div class="bg-success bg-opacity-10 text-success rounded-circle p-2">
+                                                <i class="fas fa-book"></i>
+                                            </div>
+                                        }
+                                        else if (borrow.Status == "Pending")
+                                        {
+                                            <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2">
+                                                <i class="fas fa-clock"></i>
+                                            </div>
+                                        }
+                                        else if (borrow.Status == "Returned")
+                                        {
+                                            <div class="bg-info bg-opacity-10 text-info rounded-circle p-2">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="activity-content flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start mb-1">
+                                            <h6 class="fw-bold mb-0">@borrow.StudentName</h6>
+                                            <span class="text-muted small">@borrow.RequestDate.ToString("hh:mm tt")</span>
+                                        </div>
+                                        <p class="text-muted mb-2">
+                                            @if (borrow.Status == "Pending")
+                                            {
+                                                <span>Requested to borrow <strong>Book #@borrow.BookId</strong></span>
+                                            }
+                                            else if (borrow.Status == "Approved")
+                                            {
+                                                <span>Borrowed <strong>Book #@borrow.BookId</strong></span>
+                                            }
+                                            else if (borrow.Status == "Returned")
+                                            {
+                                                <span>Returned <strong>Book #@borrow.BookId</strong></span>
+                                            }
+                                            else
+                                            {
+                                                <span><strong>Book #@borrow.BookId</strong> request was rejected</span>
+                                            }
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge @(borrow.Status == "Approved" ? "bg-success" : borrow.Status == "Pending" ? "bg-warning" : borrow.Status == "Returned" ? "bg-info" : "bg-danger") px-3 py-1">
+                                                @borrow.Status
+                                            </span>
+                                            <small class="text-muted">@borrow.RequestDate.ToString("MMM dd, yyyy")</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="my-3 opacity-10">
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-history fa-3x text-muted opacity-25 mb-3"></i>
+                            <p class="text-muted">No recent activity</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Notification Toast -->
+<div class="toast-container position-fixed top-0 end-0 p-4" style="z-index: 1056;">
+    <div id="adminNotificationToast" class="toast border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-primary text-white">
+            <div class="me-auto d-flex align-items-center">
+                <i class="fas fa-bell me-2"></i>
+                <strong>Admin Alert</strong>
+            </div>
+            <small class="text-white-50">Just now</small>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body bg-light">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <div class="avatar-sm bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                </div>
+                <div class="flex-grow-1">
+                    <h6 class="mb-1" id="adminNotificationTitle">System Alert</h6>
+                    <p class="mb-0 small" id="adminNotificationMessage">Loading notification...</p>
+                </div>
+            </div>
+        </div>
+        <div class="toast-footer bg-white border-top px-3 py-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/Borrow/Manage" class="text-decoration-none small">
+                    <i class="fas fa-external-link-alt me-1"></i>View Details
+                </a>
+                <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="toast">
+                    Dismiss
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-warning {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+    }
+
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+    }
+
+    .bg-gradient-info {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+    }
+
+    .bg-gradient-danger {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+    }
+
+    .bg-gradient-dark {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    .bg-gradient-purple {
+        background: linear-gradient(135deg, #9d50bb 0%, #6e48aa 100%) !important;
+    }
+
+    .card {
+        border-radius: 12px !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+        }
+
+    .icon-wrapper {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover .icon-wrapper {
+        transform: scale(1.1);
+    }
+
+    .btn {
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+    .badge {
+        border-radius: 20px;
+    }
+
+    .table > :not(:first-child) {
+        border-top: 0;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+
+    .avatar-sm {
+        width: 40px;
+        height: 40px;
+    }
+
+    .toast {
+        border-radius: 12px;
+        overflow: hidden;
+        max-width: 400px;
+    }
+
+    .activity-item {
+        padding: 10px 0;
+    }
+
+    .activity-icon {
+        flex-shrink: 0;
+    }
+</style>
+
+@section Scripts {
+    <!-- SignalR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+
+    <script>
+        $(function() {
+            // Initialize SignalR connection
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/notificationHub")
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            // Handle received notifications
+            connection.on("ReceiveNotification", function (title, message) {
+                showAdminNotification(title, message);
+            });
+
+            // Start connection
+            connection.start()
+                .then(function () {
+                    console.log("SignalR connected successfully");
+                    updateConnectionStatus(true);
+                })
+                .catch(function (err) {
+                    console.error("SignalR connection error: ", err.toString());
+                    updateConnectionStatus(false);
+                });
+
+            // Show notification toast
+            function showAdminNotification(title, message) {
+                $('#adminNotificationTitle').text(title);
+                $('#adminNotificationMessage').text(message);
+                const toast = new bootstrap.Toast(document.getElementById('adminNotificationToast'));
+                toast.show();
+
+                // Update pending requests count if new request
+                if (title.includes("New Request") || message.includes("pending")) {
+                    const pendingCard = $('.card.bg-gradient-warning h2');
+                    if (pendingCard.length) {
+                        const currentCount = parseInt(pendingCard.text().trim());
+                        pendingCard.text(currentCount + 1);
+                    }
+                }
+            }
+
+            // Update connection status in UI
+            function updateConnectionStatus(connected) {
+                const statusElement = $('.toast-header .badge');
+                if (connected) {
+                    statusElement.removeClass('bg-danger').addClass('bg-success')
+                        .html('<i class="fas fa-wifi me-1"></i>Connected');
+                } else {
+                    statusElement.removeClass('bg-success').addClass('bg-danger')
+                        .html('<i class="fas fa-wifi-slash me-1"></i>Disconnected');
+                }
+            }
+
+            // Reconnect if disconnected
+            connection.onclose(function () {
+                updateConnectionStatus(false);
+                setTimeout(function() {
+                    connection.start().then(() => updateConnectionStatus(true));
+                }, 5000);
+            });
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+        });
+    </script>
+}

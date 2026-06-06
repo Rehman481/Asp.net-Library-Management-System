@@ -1,0 +1,188 @@
+﻿@model Library_Management_System.Models.ViewModels.BorrowViewModel
+@{
+    ViewData["Title"] = "Borrow Book";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-book"></i> Borrow Book</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Display Success/Error Messages -->
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["Success"]
+                            <br>
+                            <small>Redirecting to dashboard...</small>
+                            <script>
+                                setTimeout(function() {
+                                    window.location.href = '/StudentDashboard';
+                                }, 1500);
+                            </script>
+                        </div>
+                    }
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["Error"]</div>
+                    }
+
+                    <!-- Student Info -->
+                    <div class="alert alert-info mb-3">
+                        <h6><i class="fas fa-user"></i> Borrower Information</h6>
+                        <p class="mb-1"><strong>Name:</strong> @Model.StudentName</p>
+                        @if (ViewBag.CurrentBorrows != null)
+                        {
+                            <p class="mb-0">
+                                <strong>Current Borrows:</strong>
+                                <span class="badge @(ViewBag.CurrentBorrows >= 5 ? "bg-danger" : "bg-success")">
+                                    @ViewBag.CurrentBorrows / 5 books
+                                </span>
+                            </p>
+                        }
+                    </div>
+
+                    <!-- Book Info -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-book-open"></i> Book Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="text-primary">@Model.BookTitle</h5>
+                            <p class="mb-2"><strong>Author:</strong> @Model.BookAuthor</p>
+                            <p class="mb-0">
+                                <strong>Available Copies:</strong>
+                                <span class="badge @(ViewBag.AvailableQuantity > 0 ? "bg-success" : "bg-danger")">
+                                    @ViewBag.AvailableQuantity
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Form -->
+                    <form id="borrowForm" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="BookId" />
+                        <input type="hidden" asp-for="BookTitle" />
+                        <input type="hidden" asp-for="BookAuthor" />
+                        <input type="hidden" asp-for="StudentName" />
+
+                        <!-- Purpose -->
+                        <div class="mb-3">
+                            <label asp-for="Purpose" class="form-label">
+                                <i class="fas fa-question-circle"></i> Purpose of Borrowing *
+                            </label>
+                            <textarea asp-for="Purpose" class="form-control" rows="3"
+                                      placeholder="Why do you need this book? (e.g., for study, research, project...)"
+                                      required></textarea>
+                            <span asp-validation-for="Purpose" class="text-danger"></span>
+                            <small class="form-text text-muted">Please provide details about why you need this book.</small>
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="mb-4">
+                            <label asp-for="BorrowDurationDays" class="form-label">
+                                <i class="fas fa-calendar-alt"></i> Borrow Duration *
+                            </label>
+                            <select asp-for="BorrowDurationDays" class="form-select" required>
+                                <option value="">-- Select Duration --</option>
+                                <option value="7">7 days (1 week)</option>
+                                <option value="14" selected>14 days (2 weeks)</option>
+                                <option value="21">21 days (3 weeks)</option>
+                                <option value="30">30 days (1 month)</option>
+                            </select>
+                            <span asp-validation-for="BorrowDurationDays" class="text-danger"></span>
+                            <small class="form-text text-muted">Due date will be calculated automatically.</small>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4" id="submitBtn">
+                                <i class="fas fa-paper-plane"></i> Submit Request
+                            </button>
+                            <a href="/Book/Catalog" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Catalog
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(function() {
+            $('#borrowForm').on('submit', function(e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var submitBtn = $('#submitBtn');
+                var originalText = submitBtn.html();
+
+                // Show loading
+                submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Submitting...');
+                submitBtn.prop('disabled', true);
+
+                console.log('Form submitting to:', form.attr('action'));
+
+                // Submit via AJAX
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        console.log('Response received:', response);
+
+                        if (response && response.redirectUrl) {
+                            // ✅ Redirect to StudentDashboard
+                            console.log('Redirecting to:', response.redirectUrl);
+                            window.location.href = response.redirectUrl;
+                        } else if (response && response.success) {
+                            // If we got a JSON response
+                            alert(response.message);
+                            if (response.redirectUrl) {
+                                window.location.href = response.redirectUrl;
+                            }
+                        } else {
+                            // For regular form submission (non-AJAX fallback)
+                            console.log('Form submitted, allowing normal redirect');
+                            // Remove the submit handler and submit normally
+                            form.off('submit').submit();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX error:', error);
+                        console.error('Status:', status);
+                        console.error('Response:', xhr.responseText);
+
+                        // Show error message
+                        let errorMsg = 'Failed to submit request';
+                        try {
+                            const jsonResponse = JSON.parse(xhr.responseText);
+                            if (jsonResponse.message) {
+                                errorMsg = jsonResponse.message;
+                            }
+                        } catch (e) {
+                            // Not JSON response
+                        }
+
+                        alert('Error: ' + errorMsg);
+                        submitBtn.html(originalText);
+                        submitBtn.prop('disabled', false);
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
+}

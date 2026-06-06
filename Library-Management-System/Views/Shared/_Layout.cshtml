@@ -1,0 +1,277 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LMS</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Library_Management_System.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        /* Ultra Compact Navigation */
+        .navbar-custom {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a2530 100%);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #3498db;
+            min-height: 48px;
+        }
+
+        .navbar-brand-custom {
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.15rem 0;
+        }
+
+        /* Compact Nav Links */
+        .nav-link-custom, .btn-auth-custom {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            padding: 0.3rem 0.5rem !important;
+            margin: 0 0.1rem;
+            font-size: 0.85rem;
+            border-radius: 3px;
+        }
+
+        .nav-link-custom i, .btn-auth-custom i {
+            margin-right: 4px;
+            font-size: 0.8rem;
+        }
+
+        .nav-link-custom:hover, .btn-auth-custom:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        /* Auth buttons */
+        .auth-buttons {
+            gap: 0.2rem;
+            margin-left: 0.3rem;
+        }
+
+        .btn-register {
+            background-color: rgba(52, 152, 219, 0.25);
+        }
+
+        /* User greeting */
+        .user-greeting {
+            font-size: 0.85rem;
+            padding: 0.2rem 0.5rem;
+            margin-right: 0.2rem;
+        }
+
+        /* Mobile adjustments */
+        .navbar-collapse {
+            padding: 0.5rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 0.75rem 0 !important;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container-fluid px-2">
+                <a class="navbar-brand navbar-brand-custom" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-book"></i>LMS
+                </a>
+                <button class="navbar-toggler py-1 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" && ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")"
+                               asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "Privacy" ? "active" : "")"
+                               asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="fas fa-shield-alt"></i>Privacy
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "Contact" ? "active" : "")"
+                               asp-area="" asp-controller="Home" asp-action="Contact">
+                                <i class="fas fa-envelope"></i>Contact
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "Catalog" ? "active" : "")"
+                               asp-area="" asp-controller="Book" asp-action="Catalog">
+                                <i class="fas fa-book"></i>Books
+                            </a>
+                        </li>
+
+                        @if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom @(ViewContext.RouteData.Values["Controller"]?.ToString() == "StudentDashboard" ? "active" : "")"
+                                   asp-area="" asp-controller="StudentDashboard" asp-action="Index">
+                                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Librarian"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "Manage" ? "active" : "")"
+                                   asp-area="" asp-controller="Borrow" asp-action="Manage">
+                                    <i class="fas fa-tasks"></i>Manage
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Auth Section -->
+                    <div class="auth-buttons">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <span class="user-greeting d-none d-md-flex">
+                                <i class="fas fa-user"></i>@User.Identity.Name
+                            </span>
+
+                            <form id="logoutForm" class="form-inline m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="btn-auth-custom btn-logout">
+                                    <i class="fas fa-sign-out-alt"></i>Logout
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="btn-auth-custom btn-login" asp-area="Identity" asp-page="/Account/Login">
+                                <i class="fas fa-sign-in-alt"></i>Login
+                            </a>
+                            <a class="btn-auth-custom btn-register" asp-area="Identity" asp-page="/Account/Register">
+                                <i class="fas fa-user-plus"></i>Register
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid px-2 px-md-3">
+        <main role="main" class="py-2">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-white">
+        <div class="container-fluid px-2 px-md-3">
+            <div class="row align-items-center py-1">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; @DateTime.Now.Year - LMS</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white me-2">Privacy</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Contact" class="text-white me-2">Contact</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="text-white">Home</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.7/signalr.min.js"></script>
+    
+    <!-- SignalR script remains the same -->
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .withAutomaticReconnect()
+            .build();
+
+        connection.on("ReceiveNotification", function(message) {
+            console.log("SignalR Notification:", message);
+            showNotification(message);
+        });
+
+        connection.start()
+            .then(() => {
+                console.log("SignalR Connected");
+                const userRole = '@User?.Identity?.IsAuthenticated' === 'True' ?
+                    ('@User.IsInRole("Admin")' === 'True' ? 'Admin' :
+                     '@User.IsInRole("Librarian")' === 'True' ? 'Librarian' : 'Student') : 'Guest';
+
+                if (userRole === 'Admin' || userRole === 'Librarian') {
+                    connection.invoke("JoinAdminGroup")
+                        .catch(err => console.error("Error:", err));
+                } else if (userRole === 'Student') {
+                    const userId = '@User?.FindFirstValue(ClaimTypes.NameIdentifier)';
+                    if (userId) {
+                        connection.invoke("JoinStudentGroup")
+                            .catch(err => console.error("Error:", err));
+                    }
+                }
+            })
+            .catch(err => console.error("Connection Error:", err));
+
+        function showNotification(message) {
+            let toastContainer = document.getElementById('signalr-toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'signalr-toast-container';
+                toastContainer.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; min-width: 250px;';
+                document.body.appendChild(toastContainer);
+            }
+
+            const toastId = 'toast-' + Date.now();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.id = toastId;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+
+            let headerClass = 'bg-primary text-white';
+            let icon = 'fas fa-bell';
+
+            if (message.includes('✅') || message.includes('approved')) headerClass = 'bg-success text-white';
+            else if (message.includes('❌') || message.includes('rejected')) headerClass = 'bg-danger text-white';
+            else if (message.includes('⚠️')) headerClass = 'bg-warning text-dark';
+            else if (message.includes('📚')) headerClass = 'bg-info text-white';
+
+            toast.innerHTML = `
+                <div class="toast-header ${headerClass}">
+                    <i class="${icon} me-2"></i>
+                    <strong class="me-auto">Notification</strong>
+                    <small>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>
+                    <button type="button" class="btn-close ${headerClass.includes('dark') ? '' : 'btn-close-white'}"
+                            data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    ${message}
+                </div>
+            `;
+
+            toastContainer.appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast, { autohide: true, delay: 5000 });
+            bsToast.show();
+
+            toast.addEventListener('hidden.bs.toast', function () {
+                toast.remove();
+            });
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

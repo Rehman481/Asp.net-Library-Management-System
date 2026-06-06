@@ -1,0 +1,134 @@
+﻿@model List<Library_Management_System.Models.Borrow>
+
+@{
+    ViewData["Title"] = "Active Borrows";
+}
+
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center py-3">
+        <h1 class="h3 mb-0">
+            <i class="fas fa-book-open me-2"></i>Active Borrows
+        </h1>
+        <div>
+            <span class="badge bg-primary fs-6">Total: @Model.Count</span>
+            @{
+                int overdueCount = Model.Count(b => b.DueDate != null && b.DueDate < DateTime.Now);
+            }
+            <span class="badge bg-danger fs-6 ms-2">Overdue: @overdueCount</span>
+        </div>
+    </div>
+
+    <!-- Back button -->
+    <div class="mb-4">
+        <a href="/AdminDashboard" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Active Borrows Table -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-list me-2"></i>Active Borrows List
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Student</th>
+                                <th>Book ID</th>
+                                <th>Borrow Date</th>
+                                <th>Due Date</th>
+                                <th>Days Left</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var borrow in Model)
+                            {
+                                var isOverdue = borrow.DueDate != null && borrow.DueDate < DateTime.Now;
+                                var daysLeft = borrow.DueDate != null ? (borrow.DueDate.Value - DateTime.Now).Days : 0;
+                                var overdueDays = isOverdue ? (DateTime.Now - borrow.DueDate.Value).Days : 0;
+                                var fineAmount = isOverdue ? overdueDays * 1.00m : 0;
+
+                                <tr class="@(isOverdue ? "table-danger" : "")">
+                                    <td>@borrow.StudentName</td>
+                                    <td>@borrow.BookId</td>
+                                    <td>@borrow.BorrowDate?.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        @borrow.DueDate?.ToString("MMM dd, yyyy")
+                                        @if (isOverdue)
+                                        {
+                                            <br />
+                                
+                                            <small class="text-danger">Overdue by @overdueDays days</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (isOverdue)
+                                        {
+                                            <span class="badge bg-danger">@overdueDays days overdue</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge @(daysLeft <= 3 ? "bg-warning" : "bg-success")">
+                                                @daysLeft days left
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge @(isOverdue ? "bg-danger" : "bg-success")">
+                                            @(isOverdue ? "OVERDUE" : "Active")
+                                        </span>
+                                        @if (isOverdue)
+                                        {
+                                            <br />
+                                
+                                            <small class="text-danger">Fine: $@fineAmount.ToString("0.00")</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <form method="post" asp-action="MarkAsReturned" class="d-inline">
+                                                <input type="hidden" name="id" value="@borrow.Id" />
+                                                <button type="submit" class="btn btn-success"
+                                                        onclick="return confirm('Mark this book as returned? @(isOverdue ? $"This will record a fine of ${fineAmount:0.00}" : "")')">
+                                                    <i class="fas fa-check-circle me-1"></i> Return
+                                                </button>
+                                            </form>
+                                            @if (isOverdue)
+                                            {
+                                                <form method="post" asp-action="ExtendDueDate" class="d-inline ms-1">
+                                                    <input type="hidden" name="id" value="@borrow.Id" />
+                                                    <input type="hidden" name="extraDays" value="7" />
+                                                    <button type="submit" class="btn btn-warning"
+                                                            onclick="return confirm('Extend due date by 7 days? This will waive the current fine of $@fineAmount.ToString("0.00")')">
+                                                        <i class="fas fa-calendar-plus me-1"></i> Extend
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-book fa-4x text-muted mb-3"></i>
+                    <h4>No Active Borrows</h4>
+                    <p class="text-muted">There are no active book borrows at the moment.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
